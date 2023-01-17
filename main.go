@@ -120,7 +120,7 @@ func (b *bot) checkBalance() error {
 
 	if t.Balance < b.Config.Deposit {
 		return fmt.Errorf(
-			"balance not enough %s. available %v, needed %v",
+			"%s balance not enough. available %v, needed %v",
 			t.Ticker, t.Balance, b.Config.Deposit,
 		)
 	}
