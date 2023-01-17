@@ -1,13 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"time"
 
 	swissknife "github.com/Sagleft/swiss-knife"
+	simplecron "github.com/sagleft/simple-cron"
 )
 
 const (
-	configPath = "config.json"
+	configPath           = "config.json"
+	checkExchangeAtStart = true
 )
 
 func main() {
@@ -19,6 +23,8 @@ func main() {
 	); err != nil {
 		log.Fatalln(err)
 	}
+
+	swissknife.RunInBackground()
 }
 
 func newBot() *bot {
@@ -30,6 +36,13 @@ func (b *bot) parseConfig() error {
 }
 
 func (b *bot) run() error {
-	// TODO
+	simplecron.NewCronHandler(
+		b.checkExchange,
+		time.Duration(b.Config.CheckExchangeTimeout)*time.Second,
+	).Run(checkExchangeAtStart)
 	return nil
+}
+
+func (b *bot) checkExchange() {
+	fmt.Println("timer tick")
 }

@@ -14,5 +14,6 @@
     "exchange": {
         "pubkey": "",
         "password": ""
-    }
+    },
+    "checkExchangeTimeoutSeconds": 10
 }
