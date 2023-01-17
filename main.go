@@ -50,21 +50,22 @@ func (b *bot) auth() error {
 }
 
 func (b *bot) verifyTradePair() error {
+	_, err := b.getTradePair(b.Config.TradePair)
+	return err
+}
+
+func (b *bot) getTradePair(code string) (uexchange.PairsDataContainer, error) {
 	pairs, err := b.Client.GetPairs()
 	if err != nil {
-		return fmt.Errorf("get pairs: %w", err)
+		return uexchange.PairsDataContainer{}, fmt.Errorf("get pairs: %w", err)
 	}
 
-	isPairFound := false
 	for _, p := range pairs {
-		if strings.EqualFold(b.Config.TradePair, p.Pair.PairCode) {
-			isPairFound = true
+		if strings.EqualFold(code, p.Pair.PairCode) {
+			return p, nil
 		}
 	}
-	if !isPairFound {
-		return fmt.Errorf("%q trade pair not found", b.Config.TradePair)
-	}
-	return nil
+	return uexchange.PairsDataContainer{}, fmt.Errorf("%q trade pair not found", b.Config.TradePair)
 }
 
 func (b *bot) run() error {
