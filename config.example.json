@@ -15,5 +15,6 @@
         "pubkey": "",
         "password": ""
     },
-    "checkExchangeTimeoutSeconds": 10
+    "checkExchangeTimeoutSeconds": 10,
+    "startFromBuyAction": true
 }

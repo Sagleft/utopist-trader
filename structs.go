@@ -16,6 +16,7 @@ type config struct {
 	Deposit              float64        `json:"deposit"`
 	Exchange             exchangeConfig `json:"exchange"`
 	CheckExchangeTimeout float64        `json:"checkExchangeTimeoutSeconds"`
+	StartFromBuy         bool           `json:"startFromBuyAction"`
 }
 
 type percentParam struct {
