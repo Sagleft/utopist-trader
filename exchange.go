@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/Sagleft/uexchange-go"
-	"github.com/fatih/color"
 )
 
 func (b *bot) verifyTradePair() error {
@@ -83,14 +82,4 @@ func (b *bot) checkBalance() error {
 	}
 
 	return nil
-}
-
-func (b *bot) checkExchange() {
-	pairData, err := b.Client.GetPairPrice(strings.ToLower(b.Config.TradePair))
-	if err != nil {
-		color.Red(err.Error())
-		return
-	}
-
-	fmt.Printf("ask %v, bid %v\n", pairData.BestAskPrice, pairData.BestBidPrice)
 }
