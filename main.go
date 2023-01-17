@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -27,7 +26,8 @@ func main() {
 		b.checkBalance,
 		b.run,
 	); err != nil {
-		log.Fatalln(err)
+		color.Red(err.Error())
+		return
 	}
 
 	swissknife.RunInBackground()
