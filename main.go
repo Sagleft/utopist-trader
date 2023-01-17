@@ -8,6 +8,7 @@ import (
 
 	swissknife "github.com/Sagleft/swiss-knife"
 	"github.com/Sagleft/uexchange-go"
+	"github.com/fatih/color"
 	simplecron "github.com/sagleft/simple-cron"
 )
 
@@ -77,5 +78,11 @@ func (b *bot) run() error {
 }
 
 func (b *bot) checkExchange() {
-	b.Client.GetPairPrice(b.Config.TradePair)
+	pairData, err := b.Client.GetPairPrice(strings.ToLower(b.Config.TradePair))
+	if err != nil {
+		color.Red(err.Error())
+		return
+	}
+
+	fmt.Printf("ask %v, bid %v\n", pairData.BestAskPrice, pairData.BestBidPrice)
 }
