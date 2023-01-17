@@ -9,16 +9,12 @@ import (
 	simplecron "github.com/sagleft/simple-cron"
 )
 
-const (
-	configPath           = "config.json"
-	checkExchangeAtStart = true
-)
-
 func main() {
 	b := newBot()
 
 	if err := swissknife.CheckErrors(
 		b.parseConfig,
+		b.initTradeAction,
 		b.auth,
 		b.verifyTradePair,
 		b.checkBalance,
@@ -35,6 +31,15 @@ func newBot() *bot {
 	return &bot{
 		Client: uexchange.NewClient(),
 	}
+}
+
+func (b *bot) initTradeAction() error {
+	if b.Config.StartFromBuy {
+		b.NextAction = ActionBUY
+	} else {
+		b.NextAction = ActionSELL
+	}
+	return nil
 }
 
 func (b *bot) auth() error {

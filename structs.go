@@ -5,6 +5,8 @@ import "github.com/Sagleft/uexchange-go"
 type bot struct {
 	Client *uexchange.Client
 	Config config
+
+	NextAction ActionType
 }
 
 type config struct {

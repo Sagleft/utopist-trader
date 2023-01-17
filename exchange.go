@@ -68,9 +68,12 @@ func (b *bot) checkBalance() error {
 	}
 
 	var t botTickerBalance
-	if b.Config.StartFromBuy {
+	switch b.NextAction {
+	default:
+		return fmt.Errorf("unknown bot next action: %v", b.NextAction)
+	case ActionBUY:
 		t = pairBalance.QuoteAsset
-	} else {
+	case ActionSELL:
 		t = pairBalance.BaseAsset
 	}
 
