@@ -1,4 +1,6 @@
 github.com/Sagleft/swiss-knife v1.2.1 h1:zTs9C+UPoTsXymHw8glYBqAdH/KH8a4ire+U3yAqhf0=
 github.com/Sagleft/swiss-knife v1.2.1/go.mod h1:qPlA/Y53sIYAyJI+E3StPw3vNSy9rzxAeh03oemFM9g=
+github.com/Sagleft/uexchange-go v1.3.4 h1:MKGyOJ4Q/b0cx25M8/71wE0814AqIqMzMUy8ltu+IyA=
+github.com/Sagleft/uexchange-go v1.3.4/go.mod h1:a3ymZXpf1R5DzzzFS5FVUQSUPD9m+4VChcQ8vLFl36Y=
 github.com/sagleft/simple-cron v1.4.1 h1:k95Z8Gxb6BB7X7a4byEbI38mFEI5hYC3lUstCS5ktkg=
 github.com/sagleft/simple-cron v1.4.1/go.mod h1:a++6/wI1ZzgYe+lCAKlWBwR8xBYpPl1oXJpa5rUHlJI=

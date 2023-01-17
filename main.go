@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
 	swissknife "github.com/Sagleft/swiss-knife"
+	"github.com/Sagleft/uexchange-go"
 	simplecron "github.com/sagleft/simple-cron"
 )
 
@@ -19,6 +19,7 @@ func main() {
 
 	if err := swissknife.CheckErrors(
 		b.parseConfig,
+		b.auth,
 		b.run,
 	); err != nil {
 		log.Fatalln(err)
@@ -28,11 +29,21 @@ func main() {
 }
 
 func newBot() *bot {
-	return &bot{}
+	return &bot{
+		Client: uexchange.NewClient(),
+	}
 }
 
 func (b *bot) parseConfig() error {
 	return swissknife.ParseStructFromJSONFile(configPath, &b.Config)
+}
+
+func (b *bot) auth() error {
+	_, err := b.Client.Auth(uexchange.Credentials{
+		AccountPublicKey: b.Config.Exchange.Pubkey,
+		Password:         b.Config.Exchange.Password,
+	})
+	return err
 }
 
 func (b *bot) run() error {
@@ -44,5 +55,5 @@ func (b *bot) run() error {
 }
 
 func (b *bot) checkExchange() {
-	fmt.Println("timer tick")
+
 }
