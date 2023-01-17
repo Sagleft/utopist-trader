@@ -28,3 +28,18 @@ type exchangeConfig struct {
 	Pubkey   string `json:"pubkey"`
 	Password string `json:"password"`
 }
+
+type botPairData struct {
+	BaseAsset  string
+	QuoteAsset string
+}
+
+type botPairBalance struct {
+	BaseAsset  botTickerBalance
+	QuoteAsset botTickerBalance
+}
+
+type botTickerBalance struct {
+	Ticker  string
+	Balance float64
+}

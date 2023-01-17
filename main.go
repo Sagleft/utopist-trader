@@ -24,6 +24,7 @@ func main() {
 		b.parseConfig,
 		b.auth,
 		b.verifyTradePair,
+		b.checkBalance,
 		b.run,
 	); err != nil {
 		log.Fatalln(err)
@@ -67,6 +68,64 @@ func (b *bot) getTradePair(code string) (uexchange.PairsDataContainer, error) {
 		}
 	}
 	return uexchange.PairsDataContainer{}, fmt.Errorf("%q trade pair not found", b.Config.TradePair)
+}
+
+func (b *bot) getPairParts() botPairData {
+	pairParts := strings.Split(strings.ToLower(b.Config.TradePair), "_")
+	return botPairData{
+		BaseAsset:  pairParts[0],
+		QuoteAsset: pairParts[1],
+	}
+}
+
+func (b *bot) getBalance() (botPairBalance, error) {
+	balances, err := b.Client.GetBalance()
+	if err != nil {
+		return botPairBalance{}, fmt.Errorf("get balance: %w", err)
+	}
+
+	pairParts := b.getPairParts()
+
+	r := botPairBalance{}
+	for _, balanceData := range balances {
+		if balanceData.Currency.Name == pairParts.BaseAsset {
+			r.BaseAsset = botTickerBalance{
+				Ticker:  pairParts.BaseAsset,
+				Balance: balanceData.Balance,
+			}
+		}
+		if balanceData.Currency.Name == pairParts.QuoteAsset {
+			r.QuoteAsset = botTickerBalance{
+				Ticker:  pairParts.QuoteAsset,
+				Balance: balanceData.Balance,
+			}
+		}
+	}
+
+	return r, nil
+}
+
+func (b *bot) checkBalance() error {
+	pairBalance, err := b.getBalance()
+	if err != nil {
+		return err
+	}
+
+	var t botTickerBalance
+	if b.Config.StartFromBuy {
+		t = pairBalance.QuoteAsset
+	} else {
+		t = pairBalance.BaseAsset
+	}
+
+	if t.Balance < b.Config.Deposit {
+		return fmt.Errorf(
+			"balance not enough %s. available %v, needed %v",
+			t.Ticker, t.Balance, b.Config.Deposit,
+		)
+	}
+
+	return nil
 }
 
 func (b *bot) run() error {
