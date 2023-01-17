@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	swissknife "github.com/Sagleft/swiss-knife"
@@ -20,6 +22,7 @@ func main() {
 	if err := swissknife.CheckErrors(
 		b.parseConfig,
 		b.auth,
+		b.verifyTradePair,
 		b.run,
 	); err != nil {
 		log.Fatalln(err)
@@ -46,6 +49,24 @@ func (b *bot) auth() error {
 	return err
 }
 
+func (b *bot) verifyTradePair() error {
+	pairs, err := b.Client.GetPairs()
+	if err != nil {
+		return fmt.Errorf("get pairs: %w", err)
+	}
+
+	isPairFound := false
+	for _, p := range pairs {
+		if strings.ToLower(b.Config.TradePair) == strings.ToLower(p.Pair.PairCode) {
+			isPairFound = true
+		}
+	}
+	if !isPairFound {
+		return fmt.Errorf("%q trade pair not found", b.Config.TradePair)
+	}
+	return nil
+}
+
 func (b *bot) run() error {
 	simplecron.NewCronHandler(
 		b.checkExchange,
@@ -55,5 +76,5 @@ func (b *bot) run() error {
 }
 
 func (b *bot) checkExchange() {
-
+	b.Client.GetPairPrice(b.Config.TradePair)
 }
