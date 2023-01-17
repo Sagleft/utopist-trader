@@ -57,7 +57,7 @@ func (b *bot) verifyTradePair() error {
 
 	isPairFound := false
 	for _, p := range pairs {
-		if strings.ToLower(b.Config.TradePair) == strings.ToLower(p.Pair.PairCode) {
+		if strings.EqualFold(b.Config.TradePair, p.Pair.PairCode) {
 			isPairFound = true
 		}
 	}
