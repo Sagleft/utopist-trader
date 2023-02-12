@@ -2,7 +2,7 @@
 
 Example of creating a DCA trading bot to Crypton Exchange. The bot gains a position, gradually averages it, and then creates a Take Profit order. Here is a simple trading cycle that the bot implements.
 
-inspired by this [article](https://habr.com/ru/company/ruvds/blog/517234/)
+inspired by this [article](https://habr.com/ru/company/ruvds/blog/517234/).
 
 ## How it works
 
@@ -14,7 +14,16 @@ How DCA bots are useful:
 
 The bot can be used as the basis for creating your own trading bots.
 
+## Configuring
+
+Just fill `config.json` file.
+
+More about the fields:
+
+* ...
+* ...
+* ...
+
 ## Useful links
 
-UDocs: https://udocs.gitbook.io/utopia-api/
-
+* [UDocs](https://udocs.gitbook.io/utopia-api/) - cCollection of all documentation about Utopia API.
