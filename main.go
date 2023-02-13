@@ -16,8 +16,8 @@ func main() {
 		b.parseConfig,
 		b.auth,
 		b.verifyTradePair,
+		b.checkBalance,
 		b.runCheckExchangeCron,
-		b.startNewLap,
 	); err != nil {
 		color.Red(err.Error())
 		return
@@ -48,6 +48,6 @@ func (b *bot) runCheckExchangeCron() error {
 			}
 		},
 		time.Duration(b.Config.CheckExchangeTimeoutSeconds)*time.Second,
-	).Run()
+	).Run(checkExchangeAtStart)
 	return nil
 }
