@@ -6,19 +6,18 @@ type bot struct {
 	Client *uexchange.Client
 	Config config
 
-	NextAction ActionType
+	Position position
 }
 
 type config struct {
-	DipTresholdPercent   float64        `json:"dipTresholdPercent"`
-	UpwardTrend          percentParam   `json:"upwardTrend"`
-	ProfitPercent        float64        `json:"profitPercent"`
-	StopLoss             percentParam   `json:"stopLoss"`
-	TradePair            string         `json:"tradePair"`
-	Deposit              float64        `json:"deposit"`
-	Exchange             exchangeConfig `json:"exchange"`
-	CheckExchangeTimeout float64        `json:"checkExchangeTimeoutSeconds"`
-	StartFromBuy         bool           `json:"startFromBuyAction"`
+	Action                      string         `json:"action"`
+	ProfitPercent               float64        `json:"profitPercent"`
+	StopLoss                    percentParam   `json:"stopLoss"`
+	TradePair                   string         `json:"tradePair"`
+	Deposit                     float64        `json:"deposit"`
+	Exchange                    exchangeConfig `json:"exchange"`
+	CheckExchangeTimeoutSeconds float64        `json:"checkExchangeTimeoutSeconds"`
+	StartFromBuy                bool           `json:"startFromBuyAction"`
 }
 
 type percentParam struct {
@@ -44,4 +43,10 @@ type botPairBalance struct {
 type botTickerBalance struct {
 	Ticker  string
 	Balance float64
+}
+
+type position struct {
+	DepositSpent     float64
+	InitialDeposit   float64
+	AvailableDeposit float64
 }

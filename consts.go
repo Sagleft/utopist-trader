@@ -1,13 +1,7 @@
 package main
 
 const (
-	configPath           = "config.json"
-	checkExchangeAtStart = true
-)
-
-type ActionType int
-
-const (
-	ActionBUY ActionType = iota
-	ActionSELL
+	configPath = "config.json"
+	ActionBUY  = "buy"
+	ActionSELL = "sell"
 )

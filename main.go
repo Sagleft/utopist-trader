@@ -14,11 +14,10 @@ func main() {
 
 	if err := swissknife.CheckErrors(
 		b.parseConfig,
-		b.initTradeAction,
 		b.auth,
 		b.verifyTradePair,
-		b.checkBalance,
-		b.run,
+		b.runCheckExchangeCron,
+		b.startNewLap,
 	); err != nil {
 		color.Red(err.Error())
 		return
@@ -33,15 +32,6 @@ func newBot() *bot {
 	}
 }
 
-func (b *bot) initTradeAction() error {
-	if b.Config.StartFromBuy {
-		b.NextAction = ActionBUY
-	} else {
-		b.NextAction = ActionSELL
-	}
-	return nil
-}
-
 func (b *bot) auth() error {
 	_, err := b.Client.Auth(uexchange.Credentials{
 		AccountPublicKey: b.Config.Exchange.Pubkey,
@@ -50,10 +40,14 @@ func (b *bot) auth() error {
 	return err
 }
 
-func (b *bot) run() error {
+func (b *bot) runCheckExchangeCron() error {
 	simplecron.NewCronHandler(
-		b.checkExchange,
-		time.Duration(b.Config.CheckExchangeTimeout)*time.Second,
-	).Run(checkExchangeAtStart)
+		func() {
+			if err := b.checkExchange(); err != nil {
+				color.Red("check exchange: %s", err.Error())
+			}
+		},
+		time.Duration(b.Config.CheckExchangeTimeoutSeconds)*time.Second,
+	).Run()
 	return nil
 }

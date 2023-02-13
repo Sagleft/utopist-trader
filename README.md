@@ -26,4 +26,4 @@ More about the fields:
 
 ## Useful links
 
-* [UDocs](https://udocs.gitbook.io/utopia-api/) - cCollection of all documentation about Utopia API.
+* [UDocs](https://udocs.gitbook.io/utopia-api/) - collection of all documentation about Utopia API.
