@@ -11,16 +11,18 @@ type bot struct {
 type lap struct {
 	Number         int
 	IntervalNumber int
+	LastPriceLevel float64
 	Position       position
 }
 
 type config struct {
-	Strategy               string         `json:"strategy"`
-	ProfitPercent          float64        `json:"profitPercent"`
-	TradePair              string         `json:"tradePair"`
-	Deposit                float64        `json:"deposit"`
-	Exchange               exchangeConfig `json:"exchange"`
-	IntervalTimeoutSeconds float64        `json:"intervalTimeoutSeconds"`
+	Strategy                  string         `json:"strategy"`
+	IntervalDepositMaxPercent float64        `json:"intervalDepositMaxPercent"`
+	ProfitPercent             float64        `json:"profitPercent"`
+	TradePair                 string         `json:"tradePair"`
+	Deposit                   float64        `json:"deposit"`
+	Exchange                  exchangeConfig `json:"exchange"`
+	IntervalTimeoutSeconds    float64        `json:"intervalTimeoutSeconds"`
 }
 
 type exchangeConfig struct {
