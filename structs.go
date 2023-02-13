@@ -15,7 +15,7 @@ type lap struct {
 }
 
 type config struct {
-	Action                 string         `json:"action"`
+	Strategy               string         `json:"strategy"`
 	ProfitPercent          float64        `json:"profitPercent"`
 	TradePair              string         `json:"tradePair"`
 	Deposit                float64        `json:"deposit"`

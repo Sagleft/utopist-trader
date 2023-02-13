@@ -68,12 +68,12 @@ func (b *bot) checkBalance() error {
 	}
 
 	var t botTickerBalance
-	switch b.Config.Action {
+	switch b.Config.Strategy {
 	default:
-		return fmt.Errorf("unknown bot next action: %v", b.Config.Action)
-	case ActionBUY:
+		return fmt.Errorf("unknown bot next action: %v", b.Config.Strategy)
+	case botStrategyBuy:
 		t = pairBalance.QuoteAsset
-	case ActionSELL:
+	case botStrategySell:
 		t = pairBalance.BaseAsset
 	}
 

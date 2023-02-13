@@ -6,6 +6,6 @@ const (
 )
 
 const (
-	ActionBUY  = "buy"
-	ActionSELL = "sell"
+	botStrategyBuy  = "buy"
+	botStrategySell = "sell"
 )
