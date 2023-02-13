@@ -84,6 +84,6 @@ func (b *bot) checkBalance() error {
 		)
 	}
 
-	b.Position.AvailableDeposit = b.Config.Deposit
+	b.Lap.Position.AvailableDeposit = b.Config.Deposit
 	return nil
 }

@@ -1,20 +1,10 @@
 {
-    "dipTresholdPercent": 1,
-    "upwardTrend": {
-        "percent": 2,
-        "enabled": false
-    },
     "profitPercent": 1,
-    "stopLoss": {
-        "percent": 2,
-        "enabled": false
-    },
     "tradePair": "CRP_UUSD",
     "deposit": 10,
     "exchange": {
         "pubkey": "",
         "password": ""
     },
-    "checkExchangeTimeoutSeconds": 10,
-    "startFromBuyAction": true
+    "intervalTimeoutSeconds": 10
 }

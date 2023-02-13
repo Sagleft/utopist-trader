@@ -47,7 +47,7 @@ func (b *bot) runCheckExchangeCron() error {
 				color.Red("check exchange: %s", err.Error())
 			}
 		},
-		time.Duration(b.Config.CheckExchangeTimeoutSeconds)*time.Second,
+		time.Duration(b.Config.IntervalTimeoutSeconds)*time.Second,
 	).Run(checkExchangeAtStart)
 	return nil
 }

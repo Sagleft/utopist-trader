@@ -5,24 +5,22 @@ import "github.com/Sagleft/uexchange-go"
 type bot struct {
 	Client *uexchange.Client
 	Config config
+	Lap    lap
+}
 
-	Position position
+type lap struct {
+	Number         int
+	IntervalNumber int
+	Position       position
 }
 
 type config struct {
-	Action                      string         `json:"action"`
-	ProfitPercent               float64        `json:"profitPercent"`
-	StopLoss                    percentParam   `json:"stopLoss"`
-	TradePair                   string         `json:"tradePair"`
-	Deposit                     float64        `json:"deposit"`
-	Exchange                    exchangeConfig `json:"exchange"`
-	CheckExchangeTimeoutSeconds float64        `json:"checkExchangeTimeoutSeconds"`
-	StartFromBuy                bool           `json:"startFromBuyAction"`
-}
-
-type percentParam struct {
-	Value   float64 `json:"percent"`
-	Enabled bool    `json:"enabled"`
+	Action                 string         `json:"action"`
+	ProfitPercent          float64        `json:"profitPercent"`
+	TradePair              string         `json:"tradePair"`
+	Deposit                float64        `json:"deposit"`
+	Exchange               exchangeConfig `json:"exchange"`
+	IntervalTimeoutSeconds float64        `json:"intervalTimeoutSeconds"`
 }
 
 type exchangeConfig struct {
