@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -13,6 +14,7 @@ import (
 
 func main() {
 	figure.NewColorFigure(previewTitle, "", previewColor, true).Print()
+	fmt.Println()
 
 	b := newBot()
 

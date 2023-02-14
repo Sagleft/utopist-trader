@@ -4,6 +4,6 @@ const (
 	configPath      = "config.json"
 	botStrategyBuy  = "buy"
 	botStrategySell = "sell"
-	previewTitle    = " utopist-trader $$$"
+	previewTitle    = " $ by SGL $"
 	previewColor    = "green"
 )

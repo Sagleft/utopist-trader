@@ -81,7 +81,7 @@ func (b *bot) sendOrder(o order) (uexchange.OrderData, error) {
 		orderID, err = b.Client.Sell(o.PairSymbol, o.Qty, o.Price)
 	}
 	if err != nil {
-		return uexchange.OrderData{}, fmt.Errorf("send market order %s: %w", o.ToString(), err)
+		return uexchange.OrderData{}, fmt.Errorf("send order %s: %w", o.ToString(), err)
 	}
 
 	// get placed order data
@@ -101,7 +101,7 @@ func (b *bot) getOrderDeposit(price float64) float64 {
 
 	log.Printf("use deposit percent: %v\n", depositPercent)
 
-	return depositPercent * b.Config.Deposit
+	return depositPercent * b.Config.Deposit / 100
 }
 
 func (b *bot) isTPPlaced() bool {
