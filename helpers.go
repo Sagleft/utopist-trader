@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 
 	swissknife "github.com/Sagleft/swiss-knife"
@@ -12,6 +13,17 @@ func (b *bot) parseConfig() error {
 	log.Println("parse config..")
 	if err := swissknife.ParseStructFromJSONFile(configPath, &b.Config); err != nil {
 		return err
+	}
+
+	success("done")
+	return nil
+}
+
+func (b *bot) verifyConfig() error {
+	log.Println("verify config..")
+
+	if b.Config.IntervalDepositMaxPercent == 0 {
+		return errors.New("invalid `intervalDepositMaxPercent`: value must be set")
 	}
 
 	success("done")

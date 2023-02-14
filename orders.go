@@ -46,7 +46,7 @@ func (b *bot) checkOrder(o order) (bool, error) {
 	// check available balance
 	bl, err := b.getDepositBalance()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("get deposit balance: %w", err)
 	}
 	if bl.Balance < orderDeposit {
 		log.Println("available deposit is not enought for the minimum order. skip")
@@ -60,6 +60,8 @@ func (b *bot) calcMarketOrder() (order, error) {
 	if err != nil {
 		return order{}, err
 	}
+
+	log.Printf("%s rate: %v\n", b.Config.PairSymbol, price)
 
 	deposit := b.getOrderDeposit(price)
 
@@ -95,9 +97,13 @@ func (b *bot) getOrderData(orderID int64) (uexchange.OrderData, error) {
 }
 
 func (b *bot) getOrderDeposit(price float64) float64 {
-	return b.getIntervalDepositPercent(price) * b.Config.Deposit
+	depositPercent := b.getIntervalDepositPercent(price)
+
+	log.Printf("use deposit percent: %v\n", depositPercent)
+
+	return depositPercent * b.Config.Deposit
 }
 
 func (b *bot) isTPPlaced() bool {
-	return b.Lap.TPOrderID == 0
+	return b.Lap.TPOrderID != 0
 }

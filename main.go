@@ -12,13 +12,13 @@ import (
 )
 
 func main() {
-	figure.NewColorFigure(" utopist-trader $$$", "", "green", true).
-		Scroll(3*1000, 200, "left")
+	figure.NewColorFigure(previewTitle, "", previewColor, true).Print()
 
 	b := newBot()
 
 	if err := swissknife.CheckErrors(
 		b.parseConfig,
+		b.verifyConfig,
 		b.auth,
 		b.verifyTradePair,
 		b.loadPairData,

@@ -2,11 +2,12 @@
     "strategy": "buy",
     "profitPercent": 1,
     "tradePair": "crp_uusd",
-    "deposit": 10,
+    "deposit": 50,
     "exchange": {
         "pubkey": "",
         "password": ""
     },
     "intervalTimeoutSeconds": 10,
+    "intervalDepositMaxPercent": 1,
     "noWait": true
 }
