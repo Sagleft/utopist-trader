@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -114,6 +115,10 @@ func (b *bot) sendMarketOrder() (uexchange.OrderData, error) {
 	orderDeposit := o.Price * o.Qty
 	pairMinDeposit := b.getPairMinDeposit()
 	if orderDeposit < pairMinDeposit {
+		log.Printf(
+			"the order deposit (%v) is not enough for the minimum: %v\n",
+			orderDeposit, pairMinDeposit,
+		)
 		return uexchange.OrderData{}, nil
 	}
 
