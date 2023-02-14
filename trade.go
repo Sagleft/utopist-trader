@@ -48,10 +48,13 @@ func (b *bot) handleInterval() error {
 	defer b.incrementIntervalNumber()
 
 	// calc market order
+	log.Printf("calc market order..")
 	defOrder, err := b.calcMarketOrder()
 	if err != nil {
 		return err
 	}
+
+	log.Printf("check order: %s", defOrder.ToString())
 	orderIsOK, err := b.checkOrder(defOrder)
 	if err != nil {
 		return err

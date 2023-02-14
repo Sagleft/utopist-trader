@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -27,6 +28,11 @@ func (b *bot) sendTPOrder(o order) (int64, error) {
 
 // returns false when order doesn't fit
 func (b *bot) checkOrder(o order) (bool, error) {
+	// check order qty
+	if o.Qty == 0 {
+		return false, errors.New("order qty is 0")
+	}
+
 	// check order min deposit
 	orderDeposit := o.Price * o.Qty
 	if orderDeposit < b.PairMinDeposit {
