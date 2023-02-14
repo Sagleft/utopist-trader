@@ -13,6 +13,21 @@ func (b *bot) resetLap() {
 	b.Lap = lap{}
 }
 
+func (b *bot) loadPairData() error {
+	pairs, err := b.Client.GetPairs()
+	if err != nil {
+		return err
+	}
+
+	for _, p := range pairs {
+		if p.Pair.PairCode == b.Config.PairSymbol {
+			b.PairData = p.Pair
+			return nil
+		}
+	}
+	return fmt.Errorf("pair %q not found", b.Config.PairSymbol)
+}
+
 // get pair price for market order
 func (b *bot) getPairPrice() (float64, error) {
 	pairData, err := b.Client.GetPairPrice(strings.ToLower(b.Config.PairSymbol))
@@ -101,6 +116,10 @@ func (b *bot) calcMarketOrder() (order, error) {
 	}, nil
 }
 
+func isOrderEmpty(orderData uexchange.OrderData) bool {
+	return orderData.OrderID == 0
+}
+
 func (b *bot) sendMarketOrder() (uexchange.OrderData, error) {
 	o, err := b.calcMarketOrder()
 	if err != nil {
@@ -117,6 +136,9 @@ func (b *bot) checkExchange() error {
 		if err != nil {
 			return err
 		}
+		if isOrderEmpty(orderData) {
+			return nil // skip
+		}
 
 		// TODO: place TP
 		return nil
@@ -130,6 +152,9 @@ func (b *bot) checkExchange() error {
 	orderData, err := b.sendMarketOrder()
 	if err != nil {
 		return err
+	}
+	if isOrderEmpty(orderData) {
+		return nil // skip
 	}
 	return nil
 }

@@ -3,9 +3,10 @@ package main
 import "github.com/Sagleft/uexchange-go"
 
 type bot struct {
-	Client *uexchange.Client
-	Config config
-	Lap    lap
+	Client   *uexchange.Client
+	Config   config
+	PairData uexchange.PairData
+	Lap      lap
 }
 
 type lap struct {

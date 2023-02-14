@@ -16,6 +16,7 @@ func main() {
 		b.parseConfig,
 		b.auth,
 		b.verifyTradePair,
+		b.loadPairData,
 		b.checkBalance,
 		b.runCheckExchangeCron,
 	); err != nil {
