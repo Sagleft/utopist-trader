@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -132,4 +133,18 @@ func (b *bot) loadPairData() error {
 		}
 	}
 	return fmt.Errorf("pair %q not found", b.Config.PairSymbol)
+}
+
+func (b *bot) verifyPairData() error {
+	log.Println("verify pair data..")
+
+	if b.PairData.RoundDealAmount == 0 {
+		return errors.New("load pair data: round deal amount is 0. data not available")
+	}
+	if b.PairData.RoundDealPrice == 0 {
+		return errors.New("load pair data: round deal price is 0. data not available")
+	}
+
+	success("done")
+	return nil
 }
