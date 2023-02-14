@@ -8,6 +8,7 @@ require (
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
 	github.com/fatih/color v1.13.0
 	github.com/sagleft/simple-cron v1.4.1
+	github.com/shopspring/decimal v1.3.1
 )
 
 require (

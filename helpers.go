@@ -7,6 +7,7 @@ import (
 
 	swissknife "github.com/Sagleft/swiss-knife"
 	"github.com/fatih/color"
+	"github.com/shopspring/decimal"
 )
 
 func (b *bot) parseConfig() error {
@@ -51,4 +52,9 @@ func success(info string, a ...interface{}) {
 		return
 	}
 	color.Green(" [ "+info+" ]", a...)
+}
+
+func roundFloatFloor(val float64, precision int) float64 {
+	f, _ := decimal.NewFromFloat(val).RoundFloor(int32(precision)).Float64()
+	return f
 }

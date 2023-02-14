@@ -67,8 +67,8 @@ func (b *bot) calcMarketOrder() (order, error) {
 
 	return order{
 		PairSymbol: b.Config.PairSymbol,
-		Qty:        deposit / price,
-		Price:      price,
+		Qty:        roundFloatFloor(deposit/price, b.PairData.RoundDealAmount),
+		Price:      roundFloatFloor(price, b.PairData.RoundDealPrice),
 	}, nil
 }
 
