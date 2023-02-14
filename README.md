@@ -29,3 +29,19 @@ More about the fields:
 * [UDocs](https://udocs.gitbook.io/utopia-api/) - collection of all documentation about Utopia API.
 * [Crypton Exchange](https://crp.is) - the exchange we work with.
 * [CRP.IS API](https://crp.is/api-doc/) - API docs.
+
+### Build from sources
+
+just run
+
+```bash
+git clone https://github.com/Sagleft/utopist-trader
+cd utopist-trader
+go build
+```
+
+& run after `config.json` setup:
+
+```bash
+./bot
+```
