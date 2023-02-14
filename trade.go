@@ -3,7 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
+
+	"github.com/Sagleft/uexchange-go"
 )
 
 func (b *bot) resetLap() {
@@ -60,20 +63,24 @@ func (b *bot) isStrategyBuy() bool {
 	return b.Config.Strategy == botStrategyBuy
 }
 
-func (b *bot) sendOrder(o order) error {
+func (b *bot) sendOrder(o order) (uexchange.OrderData, error) {
+	var orderID int64
 	var err error
 	if b.isStrategyBuy() {
-		_, err = b.Client.Buy(o.PairSymbol, o.Qty, o.Price)
+		orderID, err = b.Client.Buy(o.PairSymbol, o.Qty, o.Price)
 	} else {
-		_, err = b.Client.Sell(o.PairSymbol, o.Qty, o.Price)
+		orderID, err = b.Client.Sell(o.PairSymbol, o.Qty, o.Price)
 	}
 	if err != nil {
-		return fmt.Errorf("send market order %s: %w", o.ToString(), err)
+		return uexchange.OrderData{}, fmt.Errorf("send market order %s: %w", o.ToString(), err)
 	}
 
-	// TODO: get placed order data
-	// TODO: return order data
-	return nil
+	// get placed order data
+	orderData, err := b.Client.GetOrderHistory(strconv.FormatInt(orderID, 10))
+	if err != nil {
+		return uexchange.OrderData{}, err
+	}
+	return orderData.Order, nil
 }
 
 func (b *bot) calcMarketOrder() (order, error) {
@@ -94,10 +101,10 @@ func (b *bot) calcMarketOrder() (order, error) {
 	}, nil
 }
 
-func (b *bot) sendMarketOrder() error {
+func (b *bot) sendMarketOrder() (uexchange.OrderData, error) {
 	o, err := b.calcMarketOrder()
 	if err != nil {
-		return err
+		return uexchange.OrderData{}, err
 	}
 
 	return b.sendOrder(o)
@@ -106,7 +113,8 @@ func (b *bot) sendMarketOrder() error {
 func (b *bot) checkExchange() error {
 	if b.Lap.IntervalNumber == 0 {
 		// market buy
-		if err := b.sendMarketOrder(); err != nil {
+		orderData, err := b.sendMarketOrder()
+		if err != nil {
 			return err
 		}
 
@@ -119,7 +127,8 @@ func (b *bot) checkExchange() error {
 	// else:
 	//    cancel TP,
 	//    market buy
-	if err := b.sendMarketOrder(); err != nil {
+	orderData, err := b.sendMarketOrder()
+	if err != nil {
 		return err
 	}
 	return nil
