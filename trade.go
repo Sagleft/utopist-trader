@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -46,6 +45,10 @@ func (b *bot) getOrderDeposit(price float64) (float64, error) {
 }
 
 func (b *bot) getIntervalDepositPercent(currentPrice float64) float64 {
+	if b.isFirstInterval() {
+		return b.Config.IntervalDepositMaxPercent
+	}
+
 	intervalMaxDeposit := b.Config.Deposit * b.Config.IntervalDepositMaxPercent / 100
 	minPrice := b.Lap.LastPriceLevel * (1 - b.Config.IntervalDepositMaxPercent/2)
 	maxPrice := b.Lap.LastPriceLevel * (1 + b.Config.IntervalDepositMaxPercent/2)
@@ -58,24 +61,6 @@ func (b *bot) getIntervalDepositPercent(currentPrice float64) float64 {
 	}
 
 	return 100 - (currentPrice-minPrice)/intervalMaxDeposit
-}
-
-type order struct {
-	PairSymbol string
-	Qty        float64
-	Price      float64
-}
-
-func (o order) ToString() string {
-	jsonBytes, err := json.Marshal(o)
-	if err != nil {
-		return "{}"
-	}
-	return string(jsonBytes)
-}
-
-func (b *bot) isStrategyBuy() bool {
-	return b.Config.Strategy == botStrategyBuy
 }
 
 func (b *bot) sendOrder(o order) (uexchange.OrderData, error) {
@@ -139,6 +124,7 @@ func (b *bot) checkExchange() error {
 		if isOrderEmpty(orderData) {
 			return nil // skip
 		}
+		//
 
 		// TODO: place TP
 		return nil

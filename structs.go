@@ -51,3 +51,9 @@ type position struct {
 	InitialDeposit   float64
 	AvailableDeposit float64
 }
+
+type order struct {
+	PairSymbol string
+	Qty        float64
+	Price      float64
+}
