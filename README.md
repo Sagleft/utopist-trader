@@ -27,3 +27,5 @@ More about the fields:
 ## Useful links
 
 * [UDocs](https://udocs.gitbook.io/utopia-api/) - collection of all documentation about Utopia API.
+* [Crypton Exchange](https://crp.is) - the exchange we work with.
+* [CRP.IS API](https://crp.is/api-doc/) - API docs.
