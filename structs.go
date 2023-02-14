@@ -35,6 +35,7 @@ type config struct {
 	Deposit                   float64        `json:"deposit"`
 	Exchange                  exchangeConfig `json:"exchange"`
 	IntervalTimeoutSeconds    float64        `json:"intervalTimeoutSeconds"`
+	NoWait                    bool           `json:"noWait"`
 }
 
 type exchangeConfig struct {

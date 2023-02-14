@@ -63,7 +63,7 @@ func (b *bot) runCheckExchangeCron() error {
 			}
 		},
 		time.Duration(b.Config.IntervalTimeoutSeconds)*time.Second,
-	).Run(checkExchangeAtStart)
+	).Run(b.Config.NoWait)
 
 	success("done")
 	return nil

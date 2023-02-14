@@ -1,11 +1,7 @@
 package main
 
 const (
-	configPath           = "config.json"
-	checkExchangeAtStart = false
-)
-
-const (
+	configPath      = "config.json"
 	botStrategyBuy  = "buy"
 	botStrategySell = "sell"
 )

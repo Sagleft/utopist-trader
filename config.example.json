@@ -7,5 +7,6 @@
         "pubkey": "",
         "password": ""
     },
-    "intervalTimeoutSeconds": 10
+    "intervalTimeoutSeconds": 10,
+    "noWait": true
 }
