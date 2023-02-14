@@ -76,6 +76,10 @@ func (b *bot) sendOrder(o order) (uexchange.OrderData, error) {
 	}
 
 	// get placed order data
+	return b.getOrderData(orderID)
+}
+
+func (b *bot) getOrderData(orderID int64) (uexchange.OrderData, error) {
 	orderData, err := b.Client.GetOrderHistory(strconv.FormatInt(orderID, 10))
 	if err != nil {
 		return uexchange.OrderData{}, err

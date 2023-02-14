@@ -85,13 +85,47 @@ func (b *bot) handleInterval() error {
 	return nil
 }
 
+func (b *bot) getTPExecutedState() (orderExecutedState, error) {
+	tpOrderData, err := b.getOrderData(b.Lap.TPOrderID)
+	if err != nil {
+		return orderExecutedState{}, err
+	}
+
+	return orderExecutedState{
+		IsFullExecuted:      tpOrderData.ExecutedValue == tpOrderData.OriginalValue,
+		IsPartiallyExecuted: tpOrderData.ExecutedValue > 0,
+	}, nil
+}
+
+func (b *bot) getLapProfit() (float64, error) {
+	// TODO
+
+	return 0, nil
+}
+
 func (b *bot) checkExchange() error {
+	if !b.HandleIntervalLock.TryLock() {
+		return nil // prevent parallel run
+	}
+
 	if b.Lap.IntervalNumber == 0 {
 		return b.handleInterval()
 	}
 
-	// TODO: check TP
-	// if executed -> lap finished
-	// else:
+	tpState, err := b.getTPExecutedState()
+	if err != nil {
+		return err
+	}
+
+	if tpState.IsFullExecuted {
+		lapProfit, err := b.getLapProfit()
+		if err != nil {
+			return err
+		}
+
+		log.Printf("Wow! Lap finished! Profit: %v\n", lapProfit)
+		b.resetLap()
+	}
+
 	return b.handleInterval()
 }

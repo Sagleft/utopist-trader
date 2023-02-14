@@ -1,6 +1,10 @@
 package main
 
-import "github.com/Sagleft/uexchange-go"
+import (
+	"sync"
+
+	"github.com/Sagleft/uexchange-go"
+)
 
 type bot struct {
 	Client         *uexchange.Client
@@ -8,6 +12,8 @@ type bot struct {
 	PairData       uexchange.PairData
 	PairMinDeposit float64
 	Lap            lap
+
+	HandleIntervalLock sync.Mutex
 }
 
 type lap struct {
@@ -54,4 +60,9 @@ type order struct {
 	PairSymbol string
 	Qty        float64
 	Price      float64
+}
+
+type orderExecutedState struct {
+	IsFullExecuted      bool
+	IsPartiallyExecuted bool
 }
