@@ -70,10 +70,13 @@ func (b *bot) sendOrder(o order) error {
 	if err != nil {
 		return fmt.Errorf("send market order %s: %w", o.ToString(), err)
 	}
+
+	// TODO: get placed order data
+	// TODO: return order data
 	return nil
 }
 
-func (b *bot) getMarketOrder() (order, error) {
+func (b *bot) calcMarketOrder() (order, error) {
 	price, err := b.getPairPrice()
 	if err != nil {
 		return order{}, err
@@ -92,7 +95,7 @@ func (b *bot) getMarketOrder() (order, error) {
 }
 
 func (b *bot) sendMarketOrder() error {
-	o, err := b.getMarketOrder()
+	o, err := b.calcMarketOrder()
 	if err != nil {
 		return err
 	}
