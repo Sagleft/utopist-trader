@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/Sagleft/uexchange-go"
@@ -51,13 +52,13 @@ func (b *bot) handleInterval() error {
 	log.Printf("calc market order..")
 	defOrder, err := b.calcMarketOrder()
 	if err != nil {
-		return err
+		return fmt.Errorf("calc market order: %w", err)
 	}
 
 	log.Printf("check order: %s", defOrder.ToString())
 	orderIsOK, err := b.checkOrder(defOrder)
 	if err != nil {
-		return err
+		return fmt.Errorf("check market order before place: %w", err)
 	}
 	if !orderIsOK {
 		return nil
@@ -66,7 +67,7 @@ func (b *bot) handleInterval() error {
 	if b.isTPPlaced() {
 		log.Printf("cancel old TP order: %v\n", b.Lap.TPOrderID)
 		if err := b.Client.Cancel(b.Lap.TPOrderID); err != nil {
-			return err
+			return fmt.Errorf("cancel old TP order: %w", err)
 		}
 	}
 
@@ -74,7 +75,7 @@ func (b *bot) handleInterval() error {
 	log.Printf("send order: %s\n", defOrder.ToString())
 	orderData, err := b.sendOrder(defOrder)
 	if err != nil {
-		return err
+		return fmt.Errorf("send market order: %w", err)
 	}
 	success("order placed: %v", orderData.OrderID)
 
@@ -87,7 +88,7 @@ func (b *bot) handleInterval() error {
 	log.Printf("place TP order: %s\n", tpOrder.ToString())
 	tpOrderID, err := b.sendTPOrder(tpOrder)
 	if err != nil {
-		return err
+		return fmt.Errorf("send TP order: %w", err)
 	}
 	success("TP placed: %v", tpOrderID)
 
@@ -124,13 +125,16 @@ func (b *bot) checkExchange() error {
 	defer b.HandleIntervalLock.Unlock()
 
 	if b.Lap.IntervalNumber == 0 {
-		return b.handleInterval()
+		if err := b.handleInterval(); err != nil {
+			return fmt.Errorf("handle interval: %w", err)
+		}
+		return nil
 	}
 
 	if b.isTPPlaced() {
 		tpState, err := b.getTPExecutedState()
 		if err != nil {
-			return err
+			return fmt.Errorf("get TP executed state: %s", err)
 		}
 
 		if tpState.IsPartiallyExecuted && !b.Lap.TPAlreadyPartiallyExecuted {
@@ -141,7 +145,7 @@ func (b *bot) checkExchange() error {
 		if tpState.IsFullExecuted {
 			lapProfit, err := b.getLapProfit(tpState)
 			if err != nil {
-				return err
+				return fmt.Errorf("get lap profit: %w", err)
 			}
 
 			success("💰 Lap finished! Profit: %v\n", lapProfit)
@@ -150,5 +154,8 @@ func (b *bot) checkExchange() error {
 		}
 	}
 
-	return b.handleInterval()
+	if err := b.handleInterval(); err != nil {
+		return fmt.Errorf("handle interval: %w", err)
+	}
+	return nil
 }
