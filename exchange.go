@@ -91,3 +91,32 @@ func (b *bot) verifyBalance() error {
 	}
 	return nil
 }
+
+// get pair price for market order
+func (b *bot) getPairPrice() (float64, error) {
+	pairData, err := b.Client.GetPairPrice(strings.ToLower(b.Config.PairSymbol))
+	if err != nil {
+		return 0, err
+	}
+
+	if b.isStrategyBuy() {
+		return pairData.BestAskPrice, nil
+	}
+	return pairData.BestBidPrice, nil
+}
+
+func (b *bot) loadPairData() error {
+	pairs, err := b.Client.GetPairs()
+	if err != nil {
+		return err
+	}
+
+	for _, p := range pairs {
+		if p.Pair.PairCode == b.Config.PairSymbol {
+			b.PairData = p.Pair
+			b.PairMinDeposit = p.Pair.MinPrice * p.Pair.MinAmount
+			return nil
+		}
+	}
+	return fmt.Errorf("pair %q not found", b.Config.PairSymbol)
+}
