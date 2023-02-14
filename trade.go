@@ -111,7 +111,17 @@ func (b *bot) sendMarketOrder() (uexchange.OrderData, error) {
 		return uexchange.OrderData{}, err
 	}
 
+	orderDeposit := o.Price * o.Qty
+	pairMinDeposit := b.getPairMinDeposit()
+	if orderDeposit < pairMinDeposit {
+		return uexchange.OrderData{}, nil
+	}
+
 	return b.sendOrder(o)
+}
+
+func (b *bot) getPairMinDeposit() float64 {
+	return b.PairData.MinPrice * b.PairData.MinAmount
 }
 
 func (b *bot) checkExchange() error {
@@ -124,7 +134,6 @@ func (b *bot) checkExchange() error {
 		if isOrderEmpty(orderData) {
 			return nil // skip
 		}
-		//
 
 		// TODO: place TP
 		return nil
