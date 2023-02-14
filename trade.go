@@ -61,25 +61,32 @@ func (b *bot) handleInterval() error {
 	}
 
 	if b.isTPPlaced() {
-		// cancel old TP order
+		log.Printf("cancel old TP order: %v\n", b.Lap.TPOrderID)
 		if err := b.Client.Cancel(b.Lap.TPOrderID); err != nil {
 			return err
 		}
 	}
 
 	// market buy
+	log.Printf("send order: %s\n", defOrder.ToString())
 	orderData, err := b.sendOrder(defOrder)
 	if err != nil {
 		return err
 	}
+	success("order placed: %v", orderData.OrderID)
 
 	b.updateDepositUsed(orderData)
 
 	// place TP
-	tpOrderID, err := b.sendTPOrder(orderData.Price)
+	log.Println("calc TP order..")
+	tpOrder := b.calcTPOrder(orderData.Price)
+
+	log.Printf("place TP order: %s\n", tpOrder.ToString())
+	tpOrderID, err := b.sendTPOrder(tpOrder)
 	if err != nil {
 		return err
 	}
+	success("TP placed: %v", tpOrderID)
 
 	// update TP order ID
 	b.Lap.TPOrderID = tpOrderID

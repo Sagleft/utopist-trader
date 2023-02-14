@@ -8,12 +8,16 @@ import (
 	"github.com/Sagleft/uexchange-go"
 )
 
-func (b *bot) sendTPOrder(baseOrderPrice float64) (int64, error) {
-	tpOrderData, err := b.sendOrder(order{
+func (b *bot) calcTPOrder(baseOrderPrice float64) order {
+	return order{
 		PairSymbol: b.Config.PairSymbol,
 		Qty:        b.Lap.CoinsQty,
 		Price:      baseOrderPrice * (1 + b.Config.ProfitPercent/100),
-	})
+	}
+}
+
+func (b *bot) sendTPOrder(o order) (int64, error) {
+	tpOrderData, err := b.sendOrder(o)
 	if err != nil {
 		return 0, err
 	}
@@ -51,10 +55,7 @@ func (b *bot) calcMarketOrder() (order, error) {
 		return order{}, err
 	}
 
-	deposit, err := b.getOrderDeposit(price)
-	if err != nil {
-		return order{}, err
-	}
+	deposit := b.getOrderDeposit(price)
 
 	return order{
 		PairSymbol: b.Config.PairSymbol,
@@ -87,8 +88,8 @@ func (b *bot) getOrderData(orderID int64) (uexchange.OrderData, error) {
 	return orderData.Order, nil
 }
 
-func (b *bot) getOrderDeposit(price float64) (float64, error) {
-	return b.getIntervalDepositPercent(price) * b.Config.Deposit, nil
+func (b *bot) getOrderDeposit(price float64) float64 {
+	return b.getIntervalDepositPercent(price) * b.Config.Deposit
 }
 
 func (b *bot) isTPPlaced() bool {
