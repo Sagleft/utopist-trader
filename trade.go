@@ -127,24 +127,27 @@ func (b *bot) checkExchange() error {
 		return b.handleInterval()
 	}
 
-	tpState, err := b.getTPExecutedState()
-	if err != nil {
-		return err
-	}
-
-	if tpState.IsPartiallyExecuted && !b.Lap.TPAlreadyPartiallyExecuted {
-		b.markTPPartiallyExecuted()
-		color.HiYellow("TP was partially executed")
-	}
-
-	if tpState.IsFullExecuted {
-		lapProfit, err := b.getLapProfit(tpState)
+	if b.isTPPlaced() {
+		tpState, err := b.getTPExecutedState()
 		if err != nil {
 			return err
 		}
 
-		success("💰 Lap finished! Profit: %v\n", lapProfit)
-		b.resetLap()
+		if tpState.IsPartiallyExecuted && !b.Lap.TPAlreadyPartiallyExecuted {
+			b.markTPPartiallyExecuted()
+			color.HiYellow("TP was partially executed")
+		}
+
+		if tpState.IsFullExecuted {
+			lapProfit, err := b.getLapProfit(tpState)
+			if err != nil {
+				return err
+			}
+
+			success("💰 Lap finished! Profit: %v\n", lapProfit)
+			b.resetLap()
+			return nil
+		}
 	}
 
 	return b.handleInterval()

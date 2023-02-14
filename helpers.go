@@ -38,5 +38,5 @@ func success(info string, a ...interface{}) {
 	if info == "" {
 		return
 	}
-	color.Green("    [ "+info+" ]", a...)
+	color.Green(" [ "+info+" ]", a...)
 }
