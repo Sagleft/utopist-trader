@@ -40,7 +40,7 @@ func (b *bot) incrementIntervalNumber() {
 
 func (b *bot) handleInterval() error {
 	log.Printf(
-		"handle interval #v..\n",
+		"handle interval %v..\n",
 		b.Lap.IntervalNumber,
 	)
 
