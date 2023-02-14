@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/Sagleft/uexchange-go"
 )
 
@@ -32,7 +34,17 @@ func (b *bot) updateDepositUsed(orderData uexchange.OrderData) {
 	b.Lap.DepositSpent += orderData.Value
 }
 
+func (b *bot) incrementIntervalNumber() {
+	b.Lap.IntervalNumber++
+}
+
 func (b *bot) handleInterval() error {
+	log.Printf(
+		"handle interval #v..\n",
+		b.Lap.IntervalNumber,
+	)
+
+	defer b.incrementIntervalNumber()
 
 	// calc market order
 	defOrder, err := b.calcMarketOrder()
@@ -81,6 +93,5 @@ func (b *bot) checkExchange() error {
 	// TODO: check TP
 	// if executed -> lap finished
 	// else:
-	//    cancel TP,
 	return b.handleInterval()
 }
