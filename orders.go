@@ -21,12 +21,8 @@ func (b *bot) sendTPOrder(baseOrderPrice float64) (int64, error) {
 	return tpOrderData.OrderID, nil
 }
 
-func (b *bot) sendMarketOrder() (uexchange.OrderData, error) {
-	o, err := b.calcMarketOrder()
-	if err != nil {
-		return uexchange.OrderData{}, err
-	}
-
+// returns false when order doesn't fit
+func (b *bot) checkOrder(o order) (bool, error) {
 	// check order min deposit
 	orderDeposit := o.Price * o.Qty
 	if orderDeposit < b.PairMinDeposit {
@@ -34,20 +30,19 @@ func (b *bot) sendMarketOrder() (uexchange.OrderData, error) {
 			"skip. the order deposit (%v) is not enough for the minimum: %v\n",
 			orderDeposit, b.PairMinDeposit,
 		)
-		return uexchange.OrderData{}, nil
+		return false, nil
 	}
 
 	// check available balance
 	bl, err := b.getDepositBalance()
 	if err != nil {
-		return uexchange.OrderData{}, err
+		return false, err
 	}
 	if bl.Balance < orderDeposit {
 		log.Println("available deposit is not enought for the minimum order. skip")
-		return uexchange.OrderData{}, nil
+		return false, nil
 	}
-
-	return b.sendOrder(o)
+	return true, nil
 }
 
 func (b *bot) calcMarketOrder() (order, error) {
@@ -66,10 +61,6 @@ func (b *bot) calcMarketOrder() (order, error) {
 		Qty:        deposit / price,
 		Price:      price,
 	}, nil
-}
-
-func isOrderEmpty(orderData uexchange.OrderData) bool {
-	return orderData.OrderID == 0
 }
 
 func (b *bot) sendOrder(o order) (uexchange.OrderData, error) {
@@ -94,4 +85,8 @@ func (b *bot) sendOrder(o order) (uexchange.OrderData, error) {
 
 func (b *bot) getOrderDeposit(price float64) (float64, error) {
 	return b.getIntervalDepositPercent(price), nil
+}
+
+func (b *bot) isTPPlaced() bool {
+	return b.Lap.TPOrderID == 0
 }

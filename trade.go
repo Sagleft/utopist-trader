@@ -33,14 +33,33 @@ func (b *bot) updateDepositUsed(orderData uexchange.OrderData) {
 }
 
 func (b *bot) handleInterval() error {
-	// market buy
-	orderData, err := b.sendMarketOrder()
+
+	// calc market order
+	defOrder, err := b.calcMarketOrder()
 	if err != nil {
 		return err
 	}
-	if isOrderEmpty(orderData) {
-		return nil // skip
+	orderIsOK, err := b.checkOrder(defOrder)
+	if err != nil {
+		return err
 	}
+	if !orderIsOK {
+		return nil
+	}
+
+	if b.isTPPlaced() {
+		// cancel old TP order
+		if err := b.Client.Cancel(b.Lap.TPOrderID); err != nil {
+			return err
+		}
+	}
+
+	// market buy
+	orderData, err := b.sendOrder(defOrder)
+	if err != nil {
+		return err
+	}
+
 	b.updateDepositUsed(orderData)
 
 	// place TP
