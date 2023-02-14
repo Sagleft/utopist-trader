@@ -14,7 +14,10 @@ type lap struct {
 	Number         int
 	IntervalNumber int
 	LastPriceLevel float64
-	DepositSpent   float64
+	TPOrderID      int64
+
+	CoinsQty     float64
+	DepositSpent float64
 }
 
 type config struct {

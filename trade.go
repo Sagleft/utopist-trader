@@ -136,8 +136,22 @@ func (b *bot) sendMarketOrder() (uexchange.OrderData, error) {
 	return b.sendOrder(o)
 }
 
-func (b *bot) updateLapOrderUsed(orderData uexchange.OrderData) {
+func (b *bot) updateDepositUsed(orderData uexchange.OrderData) {
+	b.Lap.CoinsQty += orderData.Amount
 	b.Lap.DepositSpent += orderData.Value
+}
+
+func (b *bot) sendTPOrder(baseOrderPrice float64) (int64, error) {
+	tpOrderData, err := b.sendOrder(order{
+		PairSymbol: b.Config.PairSymbol,
+		Qty:        b.Lap.CoinsQty,
+		Price:      baseOrderPrice * (1 + b.Config.ProfitPercent/100),
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return tpOrderData.OrderID, nil
 }
 
 func (b *bot) checkExchange() error {
@@ -150,9 +164,16 @@ func (b *bot) checkExchange() error {
 		if isOrderEmpty(orderData) {
 			return nil // skip
 		}
-		b.updateLapOrderUsed(orderData)
+		b.updateDepositUsed(orderData)
 
-		// TODO: place TP
+		// place TP
+		tpOrderID, err := b.sendTPOrder(orderData.Price)
+		if err != nil {
+			return err
+		}
+		// update TP order ID
+		b.Lap.TPOrderID = tpOrderID
+
 		return nil
 	}
 
@@ -168,6 +189,7 @@ func (b *bot) checkExchange() error {
 	if isOrderEmpty(orderData) {
 		return nil // skip
 	}
-	b.updateLapOrderUsed(orderData)
+	b.updateDepositUsed(orderData)
+	// TODO: same code
 	return nil
 }
