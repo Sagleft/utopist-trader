@@ -22,6 +22,7 @@ func (b *bot) loadPairData() error {
 	for _, p := range pairs {
 		if p.Pair.PairCode == b.Config.PairSymbol {
 			b.PairData = p.Pair
+			b.PairMinDeposit = p.Pair.MinPrice * p.Pair.MinAmount
 			return nil
 		}
 	}
@@ -112,21 +113,31 @@ func (b *bot) sendMarketOrder() (uexchange.OrderData, error) {
 		return uexchange.OrderData{}, err
 	}
 
+	// check order min deposit
 	orderDeposit := o.Price * o.Qty
-	pairMinDeposit := b.getPairMinDeposit()
-	if orderDeposit < pairMinDeposit {
+	if orderDeposit < b.PairMinDeposit {
 		log.Printf(
-			"the order deposit (%v) is not enough for the minimum: %v\n",
-			orderDeposit, pairMinDeposit,
+			"skip. the order deposit (%v) is not enough for the minimum: %v\n",
+			orderDeposit, b.PairMinDeposit,
 		)
+		return uexchange.OrderData{}, nil
+	}
+
+	// check available balance
+	bl, err := b.getDepositBalance()
+	if err != nil {
+		return uexchange.OrderData{}, err
+	}
+	if bl.Balance < orderDeposit {
+		log.Println("available deposit is not enought for the minimum order. skip")
 		return uexchange.OrderData{}, nil
 	}
 
 	return b.sendOrder(o)
 }
 
-func (b *bot) getPairMinDeposit() float64 {
-	return b.PairData.MinPrice * b.PairData.MinAmount
+func (b *bot) updateLapOrderUsed(orderData uexchange.OrderData) {
+	b.Lap.DepositSpent += orderData.Value
 }
 
 func (b *bot) checkExchange() error {
@@ -139,6 +150,7 @@ func (b *bot) checkExchange() error {
 		if isOrderEmpty(orderData) {
 			return nil // skip
 		}
+		b.updateLapOrderUsed(orderData)
 
 		// TODO: place TP
 		return nil
@@ -156,5 +168,6 @@ func (b *bot) checkExchange() error {
 	if isOrderEmpty(orderData) {
 		return nil // skip
 	}
+	b.updateLapOrderUsed(orderData)
 	return nil
 }

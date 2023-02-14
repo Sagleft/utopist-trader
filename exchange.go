@@ -34,7 +34,7 @@ func (b *bot) getPairParts() botPairData {
 	}
 }
 
-func (b *bot) getBalance() (botPairBalance, error) {
+func (b *bot) getBalancePerTicker() (botPairBalance, error) {
 	balances, err := b.Client.GetBalance()
 	if err != nil {
 		return botPairBalance{}, fmt.Errorf("get balance: %w", err)
@@ -61,20 +61,26 @@ func (b *bot) getBalance() (botPairBalance, error) {
 	return r, nil
 }
 
-func (b *bot) checkBalance() error {
-	pairBalance, err := b.getBalance()
+func (b *bot) getDepositBalance() (botTickerBalance, error) {
+	pairBalance, err := b.getBalancePerTicker()
 	if err != nil {
-		return err
+		return botTickerBalance{}, err
 	}
 
-	var t botTickerBalance
 	switch b.Config.Strategy {
 	default:
-		return fmt.Errorf("unknown bot next action: %v", b.Config.Strategy)
+		return botTickerBalance{}, fmt.Errorf("unknown bot next action: %v", b.Config.Strategy)
 	case botStrategyBuy:
-		t = pairBalance.QuoteAsset
+		return pairBalance.QuoteAsset, nil
 	case botStrategySell:
-		t = pairBalance.BaseAsset
+		return pairBalance.BaseAsset, nil
+	}
+}
+
+func (b *bot) verifyBalance() error {
+	t, err := b.getDepositBalance()
+	if err != nil {
+		return err
 	}
 
 	if t.Balance < b.Config.Deposit {
@@ -83,7 +89,5 @@ func (b *bot) checkBalance() error {
 			t.Ticker, t.Balance, b.Config.Deposit,
 		)
 	}
-
-	b.Lap.Position.AvailableDeposit = b.Config.Deposit
 	return nil
 }

@@ -17,7 +17,7 @@ func main() {
 		b.auth,
 		b.verifyTradePair,
 		b.loadPairData,
-		b.checkBalance,
+		b.verifyBalance,
 		b.runCheckExchangeCron,
 	); err != nil {
 		color.Red(err.Error())

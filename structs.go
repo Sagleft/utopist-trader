@@ -3,17 +3,18 @@ package main
 import "github.com/Sagleft/uexchange-go"
 
 type bot struct {
-	Client   *uexchange.Client
-	Config   config
-	PairData uexchange.PairData
-	Lap      lap
+	Client         *uexchange.Client
+	Config         config
+	PairData       uexchange.PairData
+	PairMinDeposit float64
+	Lap            lap
 }
 
 type lap struct {
 	Number         int
 	IntervalNumber int
 	LastPriceLevel float64
-	Position       position
+	DepositSpent   float64
 }
 
 type config struct {
@@ -44,12 +45,6 @@ type botPairBalance struct {
 type botTickerBalance struct {
 	Ticker  string
 	Balance float64
-}
-
-type position struct {
-	DepositSpent     float64
-	InitialDeposit   float64
-	AvailableDeposit float64
 }
 
 type order struct {
