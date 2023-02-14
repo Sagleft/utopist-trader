@@ -1,6 +1,7 @@
 {
+    "strategy": "buy",
     "profitPercent": 1,
-    "tradePair": "CRP_UUSD",
+    "tradePair": "crp_uusd",
     "deposit": 10,
     "exchange": {
         "pubkey": "",
