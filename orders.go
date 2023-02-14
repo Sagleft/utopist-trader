@@ -88,7 +88,7 @@ func (b *bot) getOrderData(orderID int64) (uexchange.OrderData, error) {
 }
 
 func (b *bot) getOrderDeposit(price float64) (float64, error) {
-	return b.getIntervalDepositPercent(price), nil
+	return b.getIntervalDepositPercent(price) * b.Config.Deposit, nil
 }
 
 func (b *bot) isTPPlaced() bool {
