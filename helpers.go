@@ -2,12 +2,20 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 
 	swissknife "github.com/Sagleft/swiss-knife"
+	"github.com/fatih/color"
 )
 
 func (b *bot) parseConfig() error {
-	return swissknife.ParseStructFromJSONFile(configPath, &b.Config)
+	log.Println("parse config..")
+	if err := swissknife.ParseStructFromJSONFile(configPath, &b.Config); err != nil {
+		return err
+	}
+
+	success("done")
+	return nil
 }
 
 func (o order) ToString() string {
@@ -24,4 +32,11 @@ func (b *bot) isStrategyBuy() bool {
 
 func (b *bot) isFirstInterval() bool {
 	return b.Lap.IntervalNumber == 0
+}
+
+func success(info string, a ...interface{}) {
+	if info == "" {
+		return
+	}
+	color.Green("[ "+info+" ]", a...)
 }

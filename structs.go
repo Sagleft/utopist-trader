@@ -22,8 +22,9 @@ type lap struct {
 	LastPriceLevel float64
 	TPOrderID      int64
 
-	CoinsQty     float64
-	DepositSpent float64
+	CoinsQty                   float64
+	DepositSpent               float64
+	TPAlreadyPartiallyExecuted bool
 }
 
 type config struct {

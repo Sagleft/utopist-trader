@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Sagleft/uexchange-go"
+	"github.com/fatih/color"
 )
 
 func (b *bot) resetLap() {
@@ -102,6 +103,10 @@ func (b *bot) getLapProfit(tpState orderExecutedState) (float64, error) {
 	return tpState.Data.ExecutedValue - b.Config.Deposit, nil
 }
 
+func (b *bot) markTPPartiallyExecuted() {
+	b.Lap.TPAlreadyPartiallyExecuted = true
+}
+
 func (b *bot) checkExchange() error {
 	if !b.HandleIntervalLock.TryLock() {
 		return nil // prevent parallel run
@@ -117,13 +122,18 @@ func (b *bot) checkExchange() error {
 		return err
 	}
 
+	if tpState.IsPartiallyExecuted && !b.Lap.TPAlreadyPartiallyExecuted {
+		b.markTPPartiallyExecuted()
+		color.HiYellow("TP was partially executed")
+	}
+
 	if tpState.IsFullExecuted {
 		lapProfit, err := b.getLapProfit(tpState)
 		if err != nil {
 			return err
 		}
 
-		log.Printf("Wow! Lap finished! Profit: %v\n", lapProfit)
+		success("💰 Lap finished! Profit: %v\n", lapProfit)
 		b.resetLap()
 	}
 

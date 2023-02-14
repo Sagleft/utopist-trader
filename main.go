@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	swissknife "github.com/Sagleft/swiss-knife"
@@ -38,14 +39,22 @@ func newBot() *bot {
 }
 
 func (b *bot) auth() error {
-	_, err := b.Client.Auth(uexchange.Credentials{
+	log.Println("connect to exchange..")
+
+	if _, err := b.Client.Auth(uexchange.Credentials{
 		AccountPublicKey: b.Config.Exchange.Pubkey,
 		Password:         b.Config.Exchange.Password,
-	})
-	return err
+	}); err != nil {
+		return err
+	}
+
+	success("connected")
+	return nil
 }
 
 func (b *bot) runCheckExchangeCron() error {
+	log.Println("setup cron..")
+
 	simplecron.NewCronHandler(
 		func() {
 			if err := b.checkExchange(); err != nil {
@@ -54,5 +63,7 @@ func (b *bot) runCheckExchangeCron() error {
 		},
 		time.Duration(b.Config.IntervalTimeoutSeconds)*time.Second,
 	).Run(checkExchangeAtStart)
+
+	success("done")
 	return nil
 }

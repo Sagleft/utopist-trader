@@ -2,14 +2,21 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/Sagleft/uexchange-go"
 )
 
 func (b *bot) verifyTradePair() error {
-	_, err := b.getTradePair(b.Config.PairSymbol)
-	return err
+	log.Println("verify trade pair..")
+
+	if _, err := b.getTradePair(b.Config.PairSymbol); err != nil {
+		return err
+	}
+
+	success("done")
+	return nil
 }
 
 func (b *bot) getTradePair(code string) (uexchange.PairsDataContainer, error) {
@@ -78,6 +85,8 @@ func (b *bot) getDepositBalance() (botTickerBalance, error) {
 }
 
 func (b *bot) verifyBalance() error {
+	log.Println("verify balance..")
+
 	t, err := b.getDepositBalance()
 	if err != nil {
 		return err
@@ -89,6 +98,7 @@ func (b *bot) verifyBalance() error {
 			t.Ticker, t.Balance, b.Config.Deposit,
 		)
 	}
+	success("done")
 	return nil
 }
 
@@ -106,6 +116,8 @@ func (b *bot) getPairPrice() (float64, error) {
 }
 
 func (b *bot) loadPairData() error {
+	log.Println("load pair data..")
+
 	pairs, err := b.Client.GetPairs()
 	if err != nil {
 		return err
@@ -115,6 +127,7 @@ func (b *bot) loadPairData() error {
 		if p.Pair.PairCode == b.Config.PairSymbol {
 			b.PairData = p.Pair
 			b.PairMinDeposit = p.Pair.MinPrice * p.Pair.MinAmount
+			success("done")
 			return nil
 		}
 	}
