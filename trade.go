@@ -12,7 +12,7 @@ func (b *bot) resetLap() {
 
 // get pair price for market order
 func (b *bot) getPairPrice() (float64, error) {
-	pairData, err := b.Client.GetPairPrice(strings.ToLower(b.Config.TradePair))
+	pairData, err := b.Client.GetPairPrice(strings.ToLower(b.Config.PairSymbol))
 	if err != nil {
 		return 0, err
 	}
@@ -23,19 +23,14 @@ func (b *bot) getPairPrice() (float64, error) {
 	return pairData.BestBidPrice, nil
 }
 
-func (b *bot) getOrderDeposit() (float64, error) {
-	price, err := b.getPairPrice()
-	if err != nil {
-		return 0, err
-	}
-
+func (b *bot) getOrderDeposit(price float64) (float64, error) {
 	return b.getIntervalDepositPercent(price), nil
 }
 
 func (b *bot) getIntervalDepositPercent(currentPrice float64) float64 {
 	intervalMaxDeposit := b.Config.Deposit * b.Config.IntervalDepositMaxPercent / 100
-	minPrice := currentPrice * (1 - b.Config.IntervalDepositMaxPercent/2)
-	maxPrice := currentPrice * (1 + b.Config.IntervalDepositMaxPercent/2)
+	minPrice := b.Lap.LastPriceLevel * (1 - b.Config.IntervalDepositMaxPercent/2)
+	maxPrice := b.Lap.LastPriceLevel * (1 + b.Config.IntervalDepositMaxPercent/2)
 
 	if currentPrice < minPrice {
 		return 100
@@ -78,10 +73,37 @@ func (b *bot) sendOrder(o order) error {
 	return nil
 }
 
+func (b *bot) getMarketOrder() (order, error) {
+	price, err := b.getPairPrice()
+	if err != nil {
+		return order{}, err
+	}
+
+	deposit, err := b.getOrderDeposit(price)
+	if err != nil {
+		return order{}, err
+	}
+
+	return order{
+		PairSymbol: b.Config.PairSymbol,
+		Qty:        deposit / price,
+		Price:      price,
+	}, nil
+}
+
+func (b *bot) sendMarketOrder() error {
+	o, err := b.getMarketOrder()
+	if err != nil {
+		return err
+	}
+
+	return b.sendOrder(o)
+}
+
 func (b *bot) checkExchange() error {
 	if b.Lap.IntervalNumber == 0 {
 		// market buy
-		if err := b.sendOrder(order{}); err != nil {
+		if err := b.sendMarketOrder(); err != nil {
 			return err
 		}
 
@@ -94,7 +116,7 @@ func (b *bot) checkExchange() error {
 	// else:
 	//    cancel TP,
 	//    market buy
-	if err := b.sendOrder(order{}); err != nil {
+	if err := b.sendMarketOrder(); err != nil {
 		return err
 	}
 	return nil

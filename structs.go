@@ -19,7 +19,7 @@ type config struct {
 	Strategy                  string         `json:"strategy"`
 	IntervalDepositMaxPercent float64        `json:"intervalDepositMaxPercent"`
 	ProfitPercent             float64        `json:"profitPercent"`
-	TradePair                 string         `json:"tradePair"`
+	PairSymbol                string         `json:"tradePair"`
 	Deposit                   float64        `json:"deposit"`
 	Exchange                  exchangeConfig `json:"exchange"`
 	IntervalTimeoutSeconds    float64        `json:"intervalTimeoutSeconds"`

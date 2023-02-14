@@ -8,7 +8,7 @@ import (
 )
 
 func (b *bot) verifyTradePair() error {
-	_, err := b.getTradePair(b.Config.TradePair)
+	_, err := b.getTradePair(b.Config.PairSymbol)
 	return err
 }
 
@@ -23,11 +23,11 @@ func (b *bot) getTradePair(code string) (uexchange.PairsDataContainer, error) {
 			return p, nil
 		}
 	}
-	return uexchange.PairsDataContainer{}, fmt.Errorf("%q trade pair not found", b.Config.TradePair)
+	return uexchange.PairsDataContainer{}, fmt.Errorf("%q trade pair not found", b.Config.PairSymbol)
 }
 
 func (b *bot) getPairParts() botPairData {
-	pairParts := strings.Split(strings.ToLower(b.Config.TradePair), "_")
+	pairParts := strings.Split(strings.ToLower(b.Config.PairSymbol), "_")
 	return botPairData{
 		BaseAsset:  pairParts[0],
 		QuoteAsset: pairParts[1],
