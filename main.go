@@ -5,11 +5,15 @@ import (
 
 	swissknife "github.com/Sagleft/swiss-knife"
 	"github.com/Sagleft/uexchange-go"
+	"github.com/common-nighthawk/go-figure"
 	"github.com/fatih/color"
 	simplecron "github.com/sagleft/simple-cron"
 )
 
 func main() {
+	figure.NewColorFigure(" utopist-trader $$$", "", "green", true).
+		Scroll(3*1000, 200, "left")
+
 	b := newBot()
 
 	if err := swissknife.CheckErrors(

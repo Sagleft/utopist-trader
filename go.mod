@@ -6,6 +6,7 @@ require github.com/Sagleft/swiss-knife v1.2.1
 
 require (
 	github.com/Sagleft/uexchange-go v1.3.4 // indirect
+	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
