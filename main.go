@@ -55,7 +55,7 @@ func (b *bot) auth() error {
 func (b *bot) runCheckExchangeCron() error {
 	log.Println("setup cron..")
 
-	simplecron.NewCronHandler(
+	go simplecron.NewCronHandler(
 		func() {
 			if err := b.checkExchange(); err != nil {
 				color.Red("check exchange: %s", err.Error())
