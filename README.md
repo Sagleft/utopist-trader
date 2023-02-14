@@ -75,3 +75,9 @@ do
 
 done
 ```
+
+save it as `make.sh`, then run it:
+
+```bash
+bash make.sh
+```
