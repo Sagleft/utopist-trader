@@ -94,19 +94,19 @@ func (b *bot) getTPExecutedState() (orderExecutedState, error) {
 	return orderExecutedState{
 		IsFullExecuted:      tpOrderData.ExecutedValue == tpOrderData.OriginalValue,
 		IsPartiallyExecuted: tpOrderData.ExecutedValue > 0,
+		Data:                tpOrderData,
 	}, nil
 }
 
-func (b *bot) getLapProfit() (float64, error) {
-	// TODO
-
-	return 0, nil
+func (b *bot) getLapProfit(tpState orderExecutedState) (float64, error) {
+	return tpState.Data.ExecutedValue - b.Config.Deposit, nil
 }
 
 func (b *bot) checkExchange() error {
 	if !b.HandleIntervalLock.TryLock() {
 		return nil // prevent parallel run
 	}
+	defer b.HandleIntervalLock.Unlock()
 
 	if b.Lap.IntervalNumber == 0 {
 		return b.handleInterval()
@@ -118,7 +118,7 @@ func (b *bot) checkExchange() error {
 	}
 
 	if tpState.IsFullExecuted {
-		lapProfit, err := b.getLapProfit()
+		lapProfit, err := b.getLapProfit(tpState)
 		if err != nil {
 			return err
 		}

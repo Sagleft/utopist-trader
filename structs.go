@@ -65,4 +65,5 @@ type order struct {
 type orderExecutedState struct {
 	IsFullExecuted      bool
 	IsPartiallyExecuted bool
+	Data                uexchange.OrderData
 }
