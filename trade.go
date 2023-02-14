@@ -154,34 +154,8 @@ func (b *bot) sendTPOrder(baseOrderPrice float64) (int64, error) {
 	return tpOrderData.OrderID, nil
 }
 
-func (b *bot) checkExchange() error {
-	if b.Lap.IntervalNumber == 0 {
-		// market buy
-		orderData, err := b.sendMarketOrder()
-		if err != nil {
-			return err
-		}
-		if isOrderEmpty(orderData) {
-			return nil // skip
-		}
-		b.updateDepositUsed(orderData)
-
-		// place TP
-		tpOrderID, err := b.sendTPOrder(orderData.Price)
-		if err != nil {
-			return err
-		}
-		// update TP order ID
-		b.Lap.TPOrderID = tpOrderID
-
-		return nil
-	}
-
-	// TODO: check TP
-	// if executed -> lap finished
-	// else:
-	//    cancel TP,
-	//    market buy
+func (b *bot) handleInterval() error {
+	// market buy
 	orderData, err := b.sendMarketOrder()
 	if err != nil {
 		return err
@@ -190,6 +164,26 @@ func (b *bot) checkExchange() error {
 		return nil // skip
 	}
 	b.updateDepositUsed(orderData)
-	// TODO: same code
+
+	// place TP
+	tpOrderID, err := b.sendTPOrder(orderData.Price)
+	if err != nil {
+		return err
+	}
+
+	// update TP order ID
+	b.Lap.TPOrderID = tpOrderID
 	return nil
+}
+
+func (b *bot) checkExchange() error {
+	if b.Lap.IntervalNumber == 0 {
+		return b.handleInterval()
+	}
+
+	// TODO: check TP
+	// if executed -> lap finished
+	// else:
+	//    cancel TP,
+	return b.handleInterval()
 }
