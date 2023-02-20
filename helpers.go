@@ -62,3 +62,7 @@ func roundFloatFloor(val float64, precision int) float64 {
 	f, _ := decimal.NewFromFloat(val).RoundFloor(int32(precision)).Float64()
 	return f
 }
+
+func warn(info string, a ...interface{}) {
+	color.Yellow("[WARN] "+info, a...)
+}

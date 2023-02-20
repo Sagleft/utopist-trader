@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/Sagleft/uexchange-go"
-	"github.com/fatih/color"
 )
 
 func (b *bot) verifyTradePair() error {
@@ -84,10 +83,6 @@ func (b *bot) getDepositBalance() (botTickerBalance, error) {
 	case botStrategySell:
 		return pairBalance.BaseAsset, nil
 	}
-}
-
-func warn(info string, a ...interface{}) {
-	color.Yellow("[WARN] "+info, a...)
 }
 
 func (b *bot) verifyBalance() error {
