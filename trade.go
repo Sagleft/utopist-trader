@@ -28,7 +28,7 @@ func (b *bot) getIntervalDepositPercent(currentPrice float64) float64 {
 		return 0
 	}
 
-	return 100 - (currentPrice-minPrice)/intervalMaxDeposit
+	return (1 - (currentPrice-minPrice)/intervalMaxDeposit) * b.Config.IntervalDepositMaxPercent
 }
 
 func (b *bot) updateDepositUsed(orderData uexchange.OrderData) {

@@ -13,11 +13,13 @@ func TestGetIntervalDepositPercent(t *testing.T) {
 			Deposit:                   100,
 		},
 		Lap: lap{
+			IntervalNumber: 1,
 			LastPriceLevel: 0.6,
 		},
 	}
 
-	depositPercent := b.getIntervalDepositPercent(0.6252)
+	currentPrice := float64(0.6252)
+	depositPercent := b.getIntervalDepositPercent(currentPrice)
 
-	assert.NotEqual(t, 0, depositPercent)
+	assert.Equal(t, 3.4748, depositPercent)
 }
