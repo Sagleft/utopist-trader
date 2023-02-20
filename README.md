@@ -28,9 +28,15 @@ Just fill `config.json` file.
 
 More about the fields:
 
-* ...
-* ...
-* ...
+* `strategy` - `buy` or `sell`.
+* `profitPercent` - what % the bot will place Take Profit orders.
+* `tradePair` - trading pair.
+* `deposit` - the maximum amount that will be used by the bot in the trading cycle.
+* `exchange` - data to connect to the exchange.
+* `intervalTimeoutSeconds` - timeout between intervals when the bot will act.
+* `intervalDepositMaxPercent` - what is the maximum % of the deposit a bot is allowed to use in one interval.
+* `noWait` - whether to execute the bot action immediately at startup.
+* `debug` - enabling/disabling detailed logs.
 
 ## Useful links
 
