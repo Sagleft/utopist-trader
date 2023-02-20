@@ -55,7 +55,7 @@ func success(info string, a ...interface{}) {
 	if info == "" {
 		return
 	}
-	color.Green(" [ "+info+" ]", a...)
+	color.Green(" [ "+info+" ]\n", a...)
 }
 
 func roundFloatFloor(val float64, precision int) float64 {
