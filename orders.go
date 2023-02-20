@@ -57,12 +57,29 @@ func (b *bot) checkOrder(o order) (bool, error) {
 		return false, nil
 	}
 
+	return true, nil
+}
+
+func (b *bot) checkTPOrder(o order) (bool, error) {
+	return b.checkOrder(o)
+}
+
+// returns false when order doesn't fit
+func (b *bot) checkMarketOrder(o order) (bool, error) {
+	isOK, err := b.checkOrder(o)
+	if err != nil {
+		return false, err
+	}
+	if !isOK {
+		return false, nil
+	}
+
 	// check available balance
 	bl, err := b.getDepositBalance()
 	if err != nil {
 		return false, fmt.Errorf("get deposit balance: %w", err)
 	}
-	if bl.Balance < orderDeposit {
+	if bl.Balance < o.Price*o.Qty {
 		log.Println("available deposit is not enought for the minimum order. skip")
 		return false, nil
 	}

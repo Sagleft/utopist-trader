@@ -56,7 +56,7 @@ func (b *bot) handleInterval() error {
 	}
 
 	log.Printf("check order: %s", defOrder.ToString())
-	orderIsOK, err := b.checkOrder(defOrder)
+	orderIsOK, err := b.checkMarketOrder(defOrder)
 	if err != nil {
 		return fmt.Errorf("check market order before place: %w", err)
 	}
@@ -84,6 +84,15 @@ func (b *bot) handleInterval() error {
 	// place TP
 	log.Println("calc TP order..")
 	tpOrder := b.calcTPOrder(orderData.Price)
+
+	log.Printf("check order: %s", tpOrder.ToString())
+	orderIsOK, err = b.checkTPOrder(tpOrder)
+	if err != nil {
+		return fmt.Errorf("check TP order before place: %w", err)
+	}
+	if !orderIsOK {
+		return nil
+	}
 
 	log.Printf("place TP order: %s\n", tpOrder.ToString())
 	tpOrderID, err := b.sendTPOrder(tpOrder)
