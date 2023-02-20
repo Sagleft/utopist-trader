@@ -42,7 +42,7 @@ func (b *bot) checkOrder(o order) (bool, error) {
 	// check order min deposit
 	orderDeposit := o.Price * o.Qty
 	if orderDeposit < b.PairMinDeposit {
-		log.Printf(
+		debug(
 			"skip. the order deposit (%v) is not enough for the minimum: %v\n",
 			orderDeposit, b.PairMinDeposit,
 		)
@@ -50,7 +50,7 @@ func (b *bot) checkOrder(o order) (bool, error) {
 	}
 
 	if o.Qty < b.PairData.MinAmount {
-		log.Printf(
+		debug(
 			"order qty is too small (%v). minimum is %v. skip",
 			o.Qty, b.PairData.MinAmount,
 		)
@@ -97,7 +97,7 @@ func (b *bot) calcMarketOrder() (order, error) {
 		return order{}, err
 	}
 
-	log.Printf("%s rate: %v\n", b.Config.PairSymbol, priceRaw)
+	debug("%s rate: %v\n", b.Config.PairSymbol, priceRaw)
 
 	price := roundFloatFloor(priceRaw, b.PairData.RoundDealPrice)
 	deposit := b.getOrderDeposit(price)
@@ -147,7 +147,7 @@ func (b *bot) getOrderData(orderID int64) (uexchange.OrderData, error) {
 func (b *bot) getOrderDeposit(price float64) float64 {
 	depositPercent := b.getIntervalDepositPercent(price)
 
-	log.Printf("use deposit percent: %v\n", depositPercent)
+	debug("use deposit percent: %v\n", depositPercent)
 
 	return depositPercent * b.Config.Deposit / 100
 }
