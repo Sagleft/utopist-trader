@@ -133,11 +133,15 @@ func (b *bot) sendOrder(o order) (uexchange.OrderData, error) {
 }
 
 func (b *bot) getOrderData(orderID int64) (uexchange.OrderData, error) {
-	orderData, err := b.Client.GetOrderHistory(strconv.FormatInt(orderID, 10))
+	response, err := b.Client.GetOrderHistory(strconv.FormatInt(orderID, 10))
 	if err != nil {
 		return uexchange.OrderData{}, err
 	}
-	return orderData.Order, nil
+
+	orderData := response.Order
+	orderData.Amount = orderData.ExecutedValue / orderData.ExecutedPrice
+
+	return orderData, nil
 }
 
 func (b *bot) getOrderDeposit(price float64) float64 {

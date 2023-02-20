@@ -47,6 +47,10 @@ func (b *bot) isFirstInterval() bool {
 	return b.Lap.IntervalNumber == 0
 }
 
+func (b *bot) setLastPriceLevel(price float64) {
+	b.Lap.LastPriceLevel = price
+}
+
 func success(info string, a ...interface{}) {
 	if info == "" {
 		return

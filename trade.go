@@ -32,6 +32,8 @@ func (b *bot) getIntervalDepositPercent(currentPrice float64) float64 {
 }
 
 func (b *bot) updateDepositUsed(orderData uexchange.OrderData) {
+	log.Printf("add lap coins qty: %v\n", orderData.Amount)
+
 	b.Lap.CoinsQty += orderData.Amount
 	b.Lap.DepositSpent += orderData.Value
 }
@@ -77,9 +79,10 @@ func (b *bot) handleInterval() error {
 	if err != nil {
 		return fmt.Errorf("send market order: %w", err)
 	}
-	success("order placed: %v", orderData.OrderID)
 
+	success("order placed: %v", orderData.OrderID)
 	b.updateDepositUsed(orderData)
+	b.setLastPriceLevel(defOrder.Price)
 
 	// place TP
 	log.Println("calc TP order..")

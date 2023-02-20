@@ -19,7 +19,7 @@ type bot struct {
 type lap struct {
 	Number         int
 	IntervalNumber int
-	LastPriceLevel float64
+	LastPriceLevel float64 // previous market order price
 	TPOrderID      int64
 
 	CoinsQty                   float64
