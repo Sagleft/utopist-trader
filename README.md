@@ -4,6 +4,8 @@ Example of creating a DCA trading bot to Crypton Exchange. The bot gains a posit
 
 inspired by this [article](https://habr.com/ru/company/ruvds/blog/517234/).
 
+![screenshot](screenshot.jpg)
+
 # How it works
 
 How DCA bots are useful:
