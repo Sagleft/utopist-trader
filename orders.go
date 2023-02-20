@@ -43,6 +43,14 @@ func (b *bot) checkOrder(o order) (bool, error) {
 		return false, nil
 	}
 
+	if o.Qty < b.PairData.MinAmount {
+		log.Printf(
+			"order qty is too small (%v). minimum is %v. skip",
+			o.Qty, b.PairData.MinAmount,
+		)
+		return false, nil
+	}
+
 	// check available balance
 	bl, err := b.getDepositBalance()
 	if err != nil {
@@ -56,19 +64,21 @@ func (b *bot) checkOrder(o order) (bool, error) {
 }
 
 func (b *bot) calcMarketOrder() (order, error) {
-	price, err := b.getPairPrice()
+	priceRaw, err := b.getPairPrice()
 	if err != nil {
 		return order{}, err
 	}
 
-	log.Printf("%s rate: %v\n", b.Config.PairSymbol, price)
+	log.Printf("%s rate: %v\n", b.Config.PairSymbol, priceRaw)
 
+	price := roundFloatFloor(priceRaw, b.PairData.RoundDealPrice)
 	deposit := b.getOrderDeposit(price)
+	qty := roundFloatFloor(deposit/price, b.PairData.RoundDealAmount)
 
 	return order{
 		PairSymbol: b.Config.PairSymbol,
-		Qty:        roundFloatFloor(deposit/price, b.PairData.RoundDealAmount),
-		Price:      roundFloatFloor(price, b.PairData.RoundDealPrice),
+		Qty:        qty,
+		Price:      price,
 	}, nil
 }
 
