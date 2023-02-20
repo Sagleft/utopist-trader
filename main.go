@@ -1,20 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
 	swissknife "github.com/Sagleft/swiss-knife"
 	"github.com/Sagleft/uexchange-go"
-	"github.com/common-nighthawk/go-figure"
 	"github.com/fatih/color"
 	simplecron "github.com/sagleft/simple-cron"
 )
 
 func main() {
-	figure.NewColorFigure(previewTitle, "", previewColor, true).Print()
-	fmt.Println()
+	swissknife.PrintIntroMessage(previewTitle, donateAddress)
 
 	b := newBot()
 
