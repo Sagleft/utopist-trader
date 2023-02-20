@@ -1,6 +1,6 @@
 {
     "strategy": "buy",
-    "profitPercent": 1,
+    "profitPercent": 0.1,
     "tradePair": "crp_uusd",
     "deposit": 60,
     "exchange": {
