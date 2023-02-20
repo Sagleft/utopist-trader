@@ -59,10 +59,10 @@ type botTickerBalance struct {
 }
 
 type order struct {
-	Type       string
-	PairSymbol string
-	Qty        float64
-	Price      float64
+	Type       string  `json:"type"`
+	PairSymbol string  `json:"symbol"`
+	Qty        float64 `json:"amount"`
+	Price      float64 `json:"price"`
 }
 
 type orderExecutedState struct {
