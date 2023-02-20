@@ -33,10 +33,10 @@ func (b *bot) getIntervalDepositPercent(currentPrice float64) float64 {
 
 func (b *bot) updateDepositUsed(orderData uexchange.OrderData) {
 	log.Printf("add lap coins qty: %v\n", orderData.Amount)
-	log.Printf("add lap depo spent: %v\n", orderData.Value)
+	log.Printf("add lap depo spent: %v\n", orderData.ExecutedValue)
 
 	b.Lap.CoinsQty += orderData.Amount
-	b.Lap.DepositSpent += orderData.Value
+	b.Lap.DepositSpent += orderData.ExecutedValue
 }
 
 func (b *bot) incrementIntervalNumber() {
