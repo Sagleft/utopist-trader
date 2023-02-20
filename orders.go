@@ -10,16 +10,18 @@ import (
 )
 
 func (b *bot) calcTPOrder(baseOrderPrice float64) order {
+	strategySign := float64(-1)
 	orderType := orderTypeBuy
 	if b.isStrategyBuy() {
 		orderType = orderTypeSell
+		strategySign = 1
 	}
 
 	return order{
 		Type:       orderType,
 		PairSymbol: b.Config.PairSymbol,
 		Qty:        b.Lap.CoinsQty,
-		Price:      baseOrderPrice * (1 + b.Config.ProfitPercent/100),
+		Price:      baseOrderPrice * (1 + strategySign*b.Config.ProfitPercent/100),
 	}
 }
 
