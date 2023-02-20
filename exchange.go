@@ -128,6 +128,9 @@ func (b *bot) loadPairData() error {
 		if p.Pair.PairCode == b.Config.PairSymbol {
 			b.PairData = p.Pair
 			b.PairMinDeposit = p.Pair.MinPrice * p.Pair.MinAmount
+
+			log.Printf("pair min deposit: %v\nmin amount: %v\n", b.PairMinDeposit, p.Pair.MinAmount)
+
 			success("done")
 			return nil
 		}
