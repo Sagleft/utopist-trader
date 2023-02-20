@@ -4,7 +4,7 @@ Example of creating a DCA trading bot to Crypton Exchange. The bot gains a posit
 
 inspired by this [article](https://habr.com/ru/company/ruvds/blog/517234/).
 
-## How it works
+# How it works
 
 How DCA bots are useful:
 1. It is a simplification of the way to invest: there is no need to study and use technical indicators, there is no need for complicated analysis.
@@ -13,6 +13,14 @@ How DCA bots are useful:
 4. Allows you to reduce the average entry point to the market.
 
 The bot can be used as the basis for creating your own trading bots.
+
+## Bot strategy
+
+Trading is divided into equal time intervals. Let's say we chose the strategy - to buy. Then we can choose a trading pair, for example `crp_usdt`. We must have a balance in USDT. The bot will buy some coins in each of the intervals, and then place a Take Profit order to sell them. If the Take Profit order is closed, then the trading cycle is complete and a new cycle begins.
+
+If the price changes, the bot calculates whether to buy more, less or do nothing. The more the price rises, the less the bot buys, the more the price falls, the more the bot will buy.
+
+This strategy is suitable both for buying a coin at the lowest price in time, and for the gradual sale. Or you can just use the bot to make money on volatility.
 
 ## Configuring
 
