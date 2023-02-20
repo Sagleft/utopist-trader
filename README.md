@@ -4,7 +4,7 @@ Example of creating a DCA trading bot to Crypton Exchange. The bot gains a posit
 
 Inspired by this [article](https://habr.com/ru/company/ruvds/blog/517234/).
 
-The finished compiled version can be found on the :arrow_down: [releases](releases) page.
+The finished compiled version can be found on the :arrow_down: [https://github.com/Sagleft/utopist-trader/releases](releases) page.
 
 ![screenshot](screenshot.jpg)
 
