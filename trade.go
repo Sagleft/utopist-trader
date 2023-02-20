@@ -139,7 +139,11 @@ func (b *bot) checkExchange() error {
 
 		if tpState.IsPartiallyExecuted && !b.Lap.TPAlreadyPartiallyExecuted {
 			b.markTPPartiallyExecuted()
-			color.HiYellow("TP was partially executed")
+			if tpState.IsFullExecuted {
+				color.HiYellow("TP was executed")
+			} else {
+				color.HiYellow("TP was partially executed")
+			}
 		}
 
 		if tpState.IsFullExecuted {
