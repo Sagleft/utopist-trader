@@ -2,7 +2,9 @@
 
 Example of creating a DCA trading bot to Crypton Exchange. The bot gains a position, gradually averages it, and then creates a Take Profit order. Here is a simple trading cycle that the bot implements.
 
-inspired by this [article](https://habr.com/ru/company/ruvds/blog/517234/).
+Inspired by this [article](https://habr.com/ru/company/ruvds/blog/517234/).
+
+The finished compiled version can be found on the :arrow_down: [releases](releases) page.
 
 ![screenshot](screenshot.jpg)
 
