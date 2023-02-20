@@ -111,9 +111,9 @@ func (b *bot) getPairPrice() (float64, error) {
 	}
 
 	if b.isStrategyBuy() {
-		return pairData.BestAskPrice, nil
+		return pairData.BestBidPrice, nil
 	}
-	return pairData.BestBidPrice, nil
+	return pairData.BestAskPrice, nil
 }
 
 func (b *bot) loadPairData() error {
