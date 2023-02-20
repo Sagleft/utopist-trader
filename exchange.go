@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/Sagleft/uexchange-go"
+	"github.com/fatih/color"
 )
 
 func (b *bot) verifyTradePair() error {
@@ -85,6 +86,10 @@ func (b *bot) getDepositBalance() (botTickerBalance, error) {
 	}
 }
 
+func warn(info string, a ...interface{}) {
+	color.Yellow("[WARN] "+info, a...)
+}
+
 func (b *bot) verifyBalance() error {
 	log.Println("verify balance..")
 
@@ -94,7 +99,7 @@ func (b *bot) verifyBalance() error {
 	}
 
 	if t.Balance < b.Config.Deposit {
-		return fmt.Errorf(
+		warn(
 			"%s balance not enough. available %v, needed %v",
 			t.Ticker, t.Balance, b.Config.Deposit,
 		)
