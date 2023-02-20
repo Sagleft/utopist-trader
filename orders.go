@@ -10,7 +10,13 @@ import (
 )
 
 func (b *bot) calcTPOrder(baseOrderPrice float64) order {
+	orderType := orderTypeBuy
+	if b.isStrategyBuy() {
+		orderType = orderTypeSell
+	}
+
 	return order{
+		Type:       orderType,
 		PairSymbol: b.Config.PairSymbol,
 		Qty:        b.Lap.CoinsQty,
 		Price:      baseOrderPrice * (1 + b.Config.ProfitPercent/100),
@@ -64,6 +70,11 @@ func (b *bot) checkOrder(o order) (bool, error) {
 }
 
 func (b *bot) calcMarketOrder() (order, error) {
+	orderType := orderTypeSell
+	if b.isStrategyBuy() {
+		orderType = orderTypeBuy
+	}
+
 	priceRaw, err := b.getPairPrice()
 	if err != nil {
 		return order{}, err
@@ -76,6 +87,7 @@ func (b *bot) calcMarketOrder() (order, error) {
 	qty := roundFloatFloor(deposit/price, b.PairData.RoundDealAmount)
 
 	return order{
+		Type:       orderType,
 		PairSymbol: b.Config.PairSymbol,
 		Qty:        qty,
 		Price:      price,
@@ -85,11 +97,16 @@ func (b *bot) calcMarketOrder() (order, error) {
 func (b *bot) sendOrder(o order) (uexchange.OrderData, error) {
 	var orderID int64
 	var err error
-	if b.isStrategyBuy() {
+
+	switch o.Type {
+	default:
+		return uexchange.OrderData{}, fmt.Errorf("unknown order type: %q", o.Type)
+	case orderTypeBuy:
 		orderID, err = b.Client.Buy(o.PairSymbol, o.Qty, o.Price)
-	} else {
+	case orderTypeSell:
 		orderID, err = b.Client.Sell(o.PairSymbol, o.Qty, o.Price)
 	}
+
 	if err != nil {
 		return uexchange.OrderData{}, fmt.Errorf("send order %s: %w", o.ToString(), err)
 	}

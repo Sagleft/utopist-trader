@@ -59,6 +59,7 @@ type botTickerBalance struct {
 }
 
 type order struct {
+	Type       string
 	PairSymbol string
 	Qty        float64
 	Price      float64
