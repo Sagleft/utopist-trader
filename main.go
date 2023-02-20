@@ -40,7 +40,7 @@ func newBot() *bot {
 }
 
 func (b *bot) auth() error {
-	log.Println("connect to exchange..")
+	debug("connect to exchange..")
 
 	if _, err := b.Client.Auth(uexchange.Credentials{
 		AccountPublicKey: b.Config.Exchange.Pubkey,
@@ -49,12 +49,12 @@ func (b *bot) auth() error {
 		return err
 	}
 
-	success("connected")
+	success("exchange connected")
 	return nil
 }
 
 func (b *bot) runCheckExchangeCron() error {
-	log.Println("setup cron..")
+	debug("setup cron..")
 
 	go simplecron.NewCronHandler(
 		func() {
@@ -65,6 +65,6 @@ func (b *bot) runCheckExchangeCron() error {
 		time.Duration(b.Config.IntervalTimeoutSeconds)*time.Second,
 	).Run(b.Config.NoWait)
 
-	success("done")
+	success("crone initiated")
 	return nil
 }

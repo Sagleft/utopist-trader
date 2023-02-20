@@ -3,20 +3,19 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/Sagleft/uexchange-go"
 )
 
 func (b *bot) verifyTradePair() error {
-	log.Println("verify trade pair..")
+	debug("verify trade pair..")
 
 	if _, err := b.getTradePair(b.Config.PairSymbol); err != nil {
 		return err
 	}
 
-	success("done")
+	success("trade pair checked")
 	return nil
 }
 
@@ -86,7 +85,7 @@ func (b *bot) getDepositBalance() (botTickerBalance, error) {
 }
 
 func (b *bot) verifyBalance() error {
-	log.Println("verify balance..")
+	debug("verify balance..")
 
 	t, err := b.getDepositBalance()
 	if err != nil {
@@ -99,7 +98,7 @@ func (b *bot) verifyBalance() error {
 			t.Ticker, t.Balance, b.Config.Deposit,
 		)
 	}
-	success("done")
+	success("balance checked")
 	return nil
 }
 
@@ -117,7 +116,7 @@ func (b *bot) getPairPrice() (float64, error) {
 }
 
 func (b *bot) loadPairData() error {
-	log.Println("load pair data..")
+	debug("load pair data..")
 
 	pairs, err := b.Client.GetPairs()
 	if err != nil {
@@ -129,9 +128,9 @@ func (b *bot) loadPairData() error {
 			b.PairData = p.Pair
 			b.PairMinDeposit = p.Pair.MinPrice * p.Pair.MinAmount
 
-			log.Printf("pair min deposit: %v\nmin amount: %v\n", b.PairMinDeposit, p.Pair.MinAmount)
-
-			success("done")
+			debug("pair min deposit: %v\n", b.PairMinDeposit)
+			debug("min amount: %v\n", p.Pair.MinAmount)
+			success("pair data loaded")
 			return nil
 		}
 	}
@@ -139,7 +138,7 @@ func (b *bot) loadPairData() error {
 }
 
 func (b *bot) verifyPairData() error {
-	log.Println("verify pair data..")
+	debug("verify pair data..")
 
 	if b.PairData.RoundDealAmount == 0 {
 		return errors.New("load pair data: round deal amount is 0. data not available")
@@ -148,6 +147,6 @@ func (b *bot) verifyPairData() error {
 		return errors.New("load pair data: round deal price is 0. data not available")
 	}
 
-	success("done")
+	success("pair data verified")
 	return nil
 }

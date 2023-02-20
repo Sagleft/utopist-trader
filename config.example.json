@@ -9,5 +9,6 @@
     },
     "intervalTimeoutSeconds": 10,
     "intervalDepositMaxPercent": 1.5,
-    "noWait": true
+    "noWait": true,
+    "debug": false
 }

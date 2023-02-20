@@ -11,3 +11,5 @@ const (
 	orderTypeBuy  = botStrategyBuy
 	orderTypeSell = botStrategySell
 )
+
+var debugMode bool

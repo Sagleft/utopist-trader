@@ -52,13 +52,13 @@ func (b *bot) handleInterval() error {
 	defer b.incrementIntervalNumber()
 
 	// calc market order
-	log.Printf("calc market order..")
+	debug("calc market order..")
 	defOrder, err := b.calcMarketOrder()
 	if err != nil {
 		return fmt.Errorf("calc market order: %w", err)
 	}
 
-	log.Printf("check order: %s", defOrder.ToString())
+	debug("check order: %s", defOrder.ToString())
 	orderIsOK, err := b.checkMarketOrder(defOrder)
 	if err != nil {
 		return fmt.Errorf("check market order before place: %w", err)
@@ -68,7 +68,7 @@ func (b *bot) handleInterval() error {
 	}
 
 	if b.isTPPlaced() {
-		log.Printf("cancel old TP order: %v\n", b.Lap.TPOrderID)
+		debug("cancel old TP order: %v\n", b.Lap.TPOrderID)
 		if err := b.Client.Cancel(b.Lap.TPOrderID); err != nil {
 			return fmt.Errorf("cancel old TP order: %w", err)
 		}
@@ -81,6 +81,7 @@ func (b *bot) handleInterval() error {
 		return fmt.Errorf("send market order: %w", err)
 	}
 
+	debug("order data: %s\n", toJSON(orderData))
 	success("order placed: %v", orderData.OrderID)
 	b.updateDepositUsed(orderData)
 	b.setLastPriceLevel(defOrder.Price)
@@ -89,7 +90,7 @@ func (b *bot) handleInterval() error {
 	log.Println("calc TP order..")
 	tpOrder := b.calcTPOrder(orderData.Price)
 
-	log.Printf("check order: %s", tpOrder.ToString())
+	debug("check order: %s", tpOrder.ToString())
 	orderIsOK, err = b.checkTPOrder(tpOrder)
 	if err != nil {
 		return fmt.Errorf("check TP order before place: %w", err)

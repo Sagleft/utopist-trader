@@ -36,6 +36,7 @@ type config struct {
 	Exchange                  exchangeConfig `json:"exchange"`
 	IntervalTimeoutSeconds    float64        `json:"intervalTimeoutSeconds"`
 	NoWait                    bool           `json:"noWait"`
+	IsDebug                   bool           `json:"debug"`
 }
 
 type exchangeConfig struct {

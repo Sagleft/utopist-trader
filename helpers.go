@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 
 	swissknife "github.com/Sagleft/swiss-knife"
@@ -11,23 +12,24 @@ import (
 )
 
 func (b *bot) parseConfig() error {
-	log.Println("parse config..")
 	if err := swissknife.ParseStructFromJSONFile(configPath, &b.Config); err != nil {
 		return err
 	}
 
-	success("done")
+	debugMode = b.Config.IsDebug
+	debug("parse config")
+	success("config parsed")
 	return nil
 }
 
 func (b *bot) verifyConfig() error {
-	log.Println("verify config..")
+	debug("verify config..")
 
 	if b.Config.IntervalDepositMaxPercent == 0 {
 		return errors.New("invalid `intervalDepositMaxPercent`: value must be set")
 	}
 
-	success("done")
+	success("config verified")
 	return nil
 }
 
@@ -65,4 +67,20 @@ func roundFloatFloor(val float64, precision int) float64 {
 
 func warn(info string, a ...interface{}) {
 	color.Yellow("[WARN] "+info, a...)
+}
+
+func toJSON(v any) string {
+	dataBytes, err := json.Marshal(v)
+	if err != nil {
+		return fmt.Sprintf(`{"error": "failed to json convert: %s"}`, err.Error())
+	}
+	return string(dataBytes)
+}
+
+func debug(info string, a ...any) {
+	if !debugMode {
+		return
+	}
+
+	log.Printf(info+"\n", a...)
 }
