@@ -166,7 +166,7 @@ func (b *bot) checkExchange() error {
 				return fmt.Errorf("get lap profit: %w", err)
 			}
 
-			success("💰 Lap finished! Profit: %v\n", lapProfit)
+			success("💰 Lap finished! Profit: %v", lapProfit)
 			b.resetLap()
 			return nil
 		}
