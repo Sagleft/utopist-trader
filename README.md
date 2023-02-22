@@ -67,7 +67,7 @@ go build
 
 ### How to build a bot for multiple platforms?
 
-just run `build.sh`
+just run `bash build.sh`
 
 ## TODO
 
