@@ -125,7 +125,7 @@ func (b *bot) getTPExecutedState() (orderExecutedState, error) {
 }
 
 func (b *bot) getLapProfit(tpState orderExecutedState) (float64, error) {
-	return tpState.Data.ExecutedValue - b.Config.Deposit, nil
+	return tpState.Data.ExecutedValue - b.Lap.DepositSpent, nil
 }
 
 func (b *bot) markTPPartiallyExecuted() {
