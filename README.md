@@ -44,6 +44,7 @@ More about the fields:
 
 ## Useful links
 
+* [Forum thread](https://talk.u.is/viewtopic.php?pid=5267) - an opportunity to ask questions and discuss this bot.
 * [UDocs](https://udocs.gitbook.io/utopia-api/) - collection of all documentation about Utopia API.
 * [Crypton Exchange](https://crp.is) - the exchange we work with.
 * [CRP.IS API](https://crp.is/api-doc/) - API docs.
