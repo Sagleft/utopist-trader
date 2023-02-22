@@ -67,3 +67,9 @@ go build
 ### How to build a bot for multiple platforms?
 
 just run `build.sh`
+
+## TODO
+
+1. recording of statistics on trading cycles;
+2. offset support for sending new orders after completing a lap;
+3. perhaps write an AI to self-learn from collected statistics.
